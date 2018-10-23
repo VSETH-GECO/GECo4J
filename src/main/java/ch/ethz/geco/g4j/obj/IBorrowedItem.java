@@ -14,4 +14,9 @@ public interface IBorrowedItem {
      * @return The name.
      */
     String getName();
+
+    /**
+     * Removes the item from the list of borrowed items.
+     */
+    void remove();
 }

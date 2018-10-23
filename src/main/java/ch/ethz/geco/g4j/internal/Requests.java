@@ -1,6 +1,7 @@
 package ch.ethz.geco.g4j.internal;
 
 import ch.ethz.geco.g4j.obj.IGECoClient;
+import ch.ethz.geco.g4j.util.APIException;
 import ch.ethz.geco.g4j.util.GECoException;
 import ch.ethz.geco.g4j.util.LogMarkers;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -83,6 +84,7 @@ public class Requests {
          * @param headers The headers to include in the request.
          * @param <T>     The type of the object to deserialize the json response into.
          * @return The deserialized response.
+         * @throws APIException If an API exception occurred.
          */
         public <T> T makeRequest(String url, Object entity, Class<T> clazz, BasicNameValuePair... headers) {
             try {
@@ -101,6 +103,7 @@ public class Requests {
          * @param headers The headers to include in the request.
          * @param <T>     The type of the object to deserialize the json response into.
          * @return The deserialized response.
+         * @throws APIException If an API exception occurred.
          */
         public <T> T makeRequest(String url, String entity, Class<T> clazz, BasicNameValuePair... headers) {
             try {
@@ -119,6 +122,7 @@ public class Requests {
          * @param headers The headers to include in the request.
          * @param <T>     The type of the object to deserialize the json response into.
          * @return The deserialized response.
+         * @throws APIException If an API exception occurred.
          */
         public <T> T makeRequest(String url, Class<T> clazz, BasicNameValuePair... headers) {
             try {
@@ -137,6 +141,7 @@ public class Requests {
          * @param headers       The headers to include in the request.
          * @param <T>           The type of the object to deserialize the json response into.
          * @return The deserialized response.
+         * @throws APIException If an API exception occurred.
          */
         public <T> T makeRequest(String url, TypeReference typeReference, BasicNameValuePair... headers) {
             try {
@@ -153,6 +158,7 @@ public class Requests {
          * @param url     The url to make the request to.
          * @param entity  Any data to serialize and send in the body of the request.
          * @param headers The headers to include in the request.
+         * @throws APIException If an API exception occurred.
          */
         public void makeRequest(String url, Object entity, BasicNameValuePair... headers) {
             try {
@@ -169,6 +175,7 @@ public class Requests {
          * @param entity  Any data to serialize and send in the body of the request.
          * @param headers The headers to include in the request.
          * @return The response as a byte array.
+         * @throws APIException If an API exception occurred.
          */
         public String makeRequest(String url, String entity, BasicNameValuePair... headers) {
             return makeRequest(url, new StringEntity(entity, "UTF-8"), headers);
@@ -180,6 +187,7 @@ public class Requests {
          * @param url     The url to make the request to.
          * @param headers The headers to include in the request.
          * @return The response as a byte array.
+         * @throws APIException If an API exception occurred.
          */
         public String makeRequest(String url, BasicNameValuePair... headers) {
             try {
@@ -203,6 +211,7 @@ public class Requests {
          * @param entity  Any data to serialize and send in the body of the request.
          * @param headers The headers to include in the request.
          * @return The response as a byte array.
+         * @throws APIException If an API exception occurred.
          */
         public String makeRequest(String url, HttpEntity entity, BasicNameValuePair... headers) {
             try {
@@ -234,13 +243,9 @@ public class Requests {
                 if (response.getEntity() != null)
                     data = EntityUtils.toString(response.getEntity());
 
-                if (responseCode == 404) {
-                    LOGGER.error(LogMarkers.API, "Received 404 error, please notify the developer and include the URL ({})", request.getURI());
-                    return null;
-                } else if (responseCode == 403) {
-                    LOGGER.error(LogMarkers.API, "Received 403 forbidden error for url {}. If you believe this is a GECo4J error, report this!", request.getURI());
-                    return null;
-                } else if ((responseCode < 200 || responseCode > 299)) {
+                if (responseCode == 403 || responseCode == 404 || responseCode == 424) {
+                    throw GECoUtils.MAPPER.readValue(data, APIException.class);
+                } else if (responseCode != 200) {
                     throw new GECoException("Error on request to " + request.getURI() + ". Received response code " + responseCode + ". With response text: " + data);
                 }
 

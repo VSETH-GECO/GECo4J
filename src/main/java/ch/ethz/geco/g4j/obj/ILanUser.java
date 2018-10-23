@@ -1,5 +1,6 @@
 package ch.ethz.geco.g4j.obj;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -92,6 +93,36 @@ public interface ILanUser {
      * @return The student association of the LAN user.
      */
     String getStudentAssoc();
+
+    /**
+     * Sets the verification status of a LAN user.
+     *
+     * @param isVerified If the LAN user is verified or not.
+     * @param legiNumber The legi number of the LAN user.
+     */
+    void setVerification(Boolean isVerified, String legiNumber); // TODO: maybe return status code enum for better error handling
+
+    /**
+     * Checks a LAN user in if the correct check-in string for that user is provided.
+     *
+     * @param checkinString The check-in string of the LAN user.
+     */
+    void checkin(String checkinString); // TODO: maybe return status code enum for better error handling
+
+    /**
+     * Gets a list of all items a LAN user has currently borrowed.
+     *
+     * @return A list of all borrowed items of the LAN user.
+     */
+    List<IBorrowedItem> getBorrowedItems();
+
+    /**
+     * Borrows a new item for the LAN user.
+     *
+     * @param name The name of the item to borrow.
+     * @return The newly borrowed item.
+     */
+    IBorrowedItem borrowItem(String name);
 
     /**
      * The status of a LAN user.

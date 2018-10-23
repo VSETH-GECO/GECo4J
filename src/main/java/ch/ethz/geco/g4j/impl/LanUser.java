@@ -1,7 +1,9 @@
 package ch.ethz.geco.g4j.impl;
 
+import ch.ethz.geco.g4j.obj.IBorrowedItem;
 import ch.ethz.geco.g4j.obj.ILanUser;
 
+import java.util.List;
 import java.util.Optional;
 
 public class LanUser implements ILanUser {
@@ -91,5 +93,25 @@ public class LanUser implements ILanUser {
     @Override
     public String getStudentAssoc() {
         return studentAssoc;
+    }
+
+    @Override
+    public void setVerification(Boolean isVerified, String legiNumber) {
+
+    }
+
+    @Override
+    public void checkin(String checkinString) {
+
+    }
+
+    @Override
+    public List<IBorrowedItem> getBorrowedItems() {
+        return null;
+    }
+
+    @Override
+    public IBorrowedItem borrowItem(String name) {
+        return null;
     }
 }

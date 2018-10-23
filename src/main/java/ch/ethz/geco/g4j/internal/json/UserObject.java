@@ -1,11 +1,11 @@
 package ch.ethz.geco.g4j.internal.json;
 
 public class UserObject {
-    Long id;
-    String name;
-    String usergroup;
-    Long lol;
-    Long steam;
-    String bnet;
-    Long discord;
+    public Long id;
+    public String name;
+    public String usergroup;
+    public Long lol;
+    public Long steam;
+    public String bnet;
+    public Long discord;
 }

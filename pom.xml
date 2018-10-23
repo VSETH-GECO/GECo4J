@@ -6,7 +6,7 @@
 
     <groupId>ch.ethz.geco</groupId>
     <artifactId>GECo4J</artifactId>
-    <version>dev-SNAPSHOT</version>
+    <version>0.1</version>
     <url>https://github.com/VSETH-GECO/GECo4J</url>
 
     <licenses>
@@ -51,13 +51,19 @@
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-afterburner</artifactId>
-            <version>2.9.6</version>
+            <version>2.9.7</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.5.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>16.0.3</version>
         </dependency>
     </dependencies>
 
