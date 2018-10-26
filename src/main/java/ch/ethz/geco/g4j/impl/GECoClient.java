@@ -191,7 +191,7 @@ public class GECoClient implements IGECoClient {
     @Override
     public INews getNewsByID(Long id) {
         try {
-            NewsObject newsObject = REQUESTS.GET.makeRequest(Endpoints.BASE + "/web/news/"+ id, NewsObject.class);
+            NewsObject newsObject = REQUESTS.GET.makeRequest(Endpoints.BASE + "/web/news/" + id, NewsObject.class);
 
             // If an internal error occurred
             if (newsObject == null) {
@@ -213,10 +213,22 @@ public class GECoClient implements IGECoClient {
     @Override
     public List<INews> getNews(Integer page) {
         try {
+            List<NewsObject> newsObjects = REQUESTS.GET.makeRequest(Endpoints.BASE + "/web/news?page=" + page, new TypeReference<NewsObject>() {
+            });
 
+            // If an internal error occurred
+            if (newsObjects == null) {
+                return null;
+            }
+
+            List<INews> news = new ArrayList<>();
+            newsObjects.forEach(newsObject -> news.add(GECoUtils.getNewsFromJSON(newsObject)));
+
+            return news;
         } catch (APIException e) {
             switch (e.getError()) {
-
+                case NOT_FOUND:
+                    return new ArrayList<>();
             }
         }
 
@@ -227,7 +239,7 @@ public class GECoClient implements IGECoClient {
     @Override
     public IEvent getEventByID(Long id) {
         try {
-            EventObject eventObject = REQUESTS.GET.makeRequest(Endpoints.BASE + "/web/events/"+ id, EventObject.class);
+            EventObject eventObject = REQUESTS.GET.makeRequest(Endpoints.BASE + "/web/events/" + id, EventObject.class);
 
             // If an internal error occurred
             if (eventObject == null) {
@@ -249,10 +261,21 @@ public class GECoClient implements IGECoClient {
     @Override
     public List<IEvent> getEvents(Integer page) {
         try {
+            List<EventObject> eventObjects = REQUESTS.GET.makeRequest(Endpoints.BASE + "/web/events?page=" + page, new TypeReference<EventObject>(){});
 
+            // If an internal error occurred
+            if (eventObjects == null) {
+                return null;
+            }
+
+            List<IEvent> events = new ArrayList<>();
+            eventObjects.forEach(eventObject -> events.add(GECoUtils.getEventFromJSON(eventObject)));
+
+            return events;
         } catch (APIException e) {
             switch (e.getError()) {
-
+                case NOT_FOUND:
+                    return new ArrayList<>();
             }
         }
 
