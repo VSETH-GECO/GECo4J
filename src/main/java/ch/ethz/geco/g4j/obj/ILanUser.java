@@ -99,15 +99,17 @@ public interface ILanUser {
      *
      * @param isVerified If the LAN user is verified or not.
      * @param legiNumber The legi number of the LAN user.
+     * @return True if the changes were applied, false otherwise.
      */
-    void setVerification(Boolean isVerified, String legiNumber); // TODO: maybe return status code enum for better error handling
+    Boolean setVerification(Boolean isVerified, String legiNumber); // TODO: maybe return status code enum for better error handling
 
     /**
      * Checks a LAN user in if the correct check-in string for that user is provided.
      *
      * @param checkinString The check-in string of the LAN user.
+     * @return True if the user was checked-in, false otherwise.
      */
-    void checkin(String checkinString); // TODO: maybe return status code enum for better error handling
+    Boolean checkin(String checkinString); // TODO: maybe return status code enum for better error handling
 
     /**
      * Gets a list of all items a LAN user has currently borrowed.

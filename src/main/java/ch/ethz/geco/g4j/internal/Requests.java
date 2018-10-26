@@ -245,7 +245,7 @@ public class Requests {
 
                 if (responseCode == 403 || responseCode == 404 || responseCode == 424) {
                     throw GECoUtils.MAPPER.readValue(data, APIException.class);
-                } else if (responseCode != 200) {
+                } else if (responseCode < 200 || responseCode > 299) {
                     throw new GECoException("Error on request to " + request.getURI() + ". Received response code " + responseCode + ". With response text: " + data);
                 }
 

@@ -1,20 +1,20 @@
 package ch.ethz.geco.g4j.internal.json;
 
 public class NewsObject {
-    String title;
-    String description;
-    String url;
-    Boolean is_draft;
-    AuthorObject author;
-    FooterObject footer;
+    public String title;
+    public String description;
+    public String url;
+    public Boolean is_draft;
+    public AuthorObject author;
+    public FooterObject footer;
 
     public class AuthorObject {
-        String name;
-        String url;
-        String icon_url;
+        public String name;
+        public String url;
+        public String icon_url;
     }
 
     public class FooterObject {
-        String text;
+        public String text;
     }
 }

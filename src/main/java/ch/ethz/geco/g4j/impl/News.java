@@ -25,41 +25,41 @@ public class News implements INews {
 
     @Override
     public String getTitle() {
-        return null;
+        return title;
     }
 
     @Override
     public String getDescription() {
-        return null;
+        return description;
     }
 
     @Override
     public String getURL() {
-        return null;
+        return url;
     }
 
     @Override
     public Boolean isDraft() {
-        return null;
+        return isDraft;
     }
 
     @Override
     public String getAuthorName() {
-        return null;
+        return authorName;
     }
 
     @Override
     public String getAuthorURL() {
-        return null;
+        return authorUrl;
     }
 
     @Override
     public String getAuthorIconURL() {
-        return null;
+        return authorIconUrl;
     }
 
     @Override
     public String getFooter() {
-        return null;
+        return footer;
     }
 }

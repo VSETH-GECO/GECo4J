@@ -15,16 +15,16 @@ public class Event implements IEvent {
 
     @Override
     public String getTitle() {
-        return null;
+        return title;
     }
 
     @Override
     public String getDescription() {
-        return null;
+        return description;
     }
 
     @Override
     public String getURL() {
-        return null;
+        return url;
     }
 }
