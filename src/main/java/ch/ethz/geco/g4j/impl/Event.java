@@ -1,7 +1,6 @@
 package ch.ethz.geco.g4j.impl;
 
 import ch.ethz.geco.g4j.obj.IEvent;
-import sun.jvm.hotspot.runtime.ConstructionException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
