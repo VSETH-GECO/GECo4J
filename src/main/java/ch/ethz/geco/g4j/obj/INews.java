@@ -2,6 +2,13 @@ package ch.ethz.geco.g4j.obj;
 
 public interface INews {
     /**
+     * Gets the ID of the news post.
+     *
+     * @return The ID of the news post.
+     */
+    Long getID();
+
+    /**
      * Gets the title of the news post.
      *
      * @return The title of the news post.

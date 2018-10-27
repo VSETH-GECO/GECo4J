@@ -2,6 +2,13 @@ package ch.ethz.geco.g4j.obj;
 
 public interface IEvent {
     /**
+     * Gets the ID of the event post.
+     *
+     * @return The ID of the event post.
+     */
+    Long getID();
+
+    /**
      * Gets the title of the event.
      *
      * @return the title of the event.
