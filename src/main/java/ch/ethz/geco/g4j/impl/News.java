@@ -3,6 +3,7 @@ package ch.ethz.geco.g4j.impl;
 import ch.ethz.geco.g4j.obj.INews;
 import sun.jvm.hotspot.runtime.ConstructionException;
 
+import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,7 +35,7 @@ public class News implements INews {
         if (matcher.find()) {
             id = Long.valueOf(matcher.group(1));
         } else {
-            throw new ConstructionException("Could not construct News object: Failed to get ID from URL.");
+            throw new RuntimeException("Could not construct News object: Failed to get ID from URL.");
         }
     }
 

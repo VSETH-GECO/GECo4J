@@ -24,7 +24,7 @@ public class Event implements IEvent {
         if (matcher.find()) {
             id = Long.valueOf(matcher.group(1));
         } else {
-            throw new ConstructionException("Could not construct Event object: Failed to get ID from URL.");
+            throw new RuntimeException("Could not construct Event object: Failed to get ID from URL.");
         }
     }
 
