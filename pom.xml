@@ -6,7 +6,7 @@
 
     <groupId>ch.ethz.geco</groupId>
     <artifactId>GECo4J</artifactId>
-    <version>0.9.1</version>
+    <version>0.9.2</version>
     <url>https://github.com/VSETH-GECO/GECo4J</url>
 
     <licenses>
