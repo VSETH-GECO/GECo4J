@@ -213,7 +213,7 @@ public class GECoClient implements IGECoClient {
     @Override
     public List<INews> getNews(Integer page) {
         try {
-            List<NewsObject> newsObjects = REQUESTS.GET.makeRequest(Endpoints.BASE + "/web/news?page=" + page, new TypeReference<NewsObject>() {
+            List<NewsObject> newsObjects = REQUESTS.GET.makeRequest(Endpoints.BASE + "/web/news?page=" + page, new TypeReference<List<NewsObject>>() {
             });
 
             // If an internal error occurred
@@ -261,7 +261,7 @@ public class GECoClient implements IGECoClient {
     @Override
     public List<IEvent> getEvents(Integer page) {
         try {
-            List<EventObject> eventObjects = REQUESTS.GET.makeRequest(Endpoints.BASE + "/web/events?page=" + page, new TypeReference<EventObject>(){});
+            List<EventObject> eventObjects = REQUESTS.GET.makeRequest(Endpoints.BASE + "/web/events?page=" + page, new TypeReference<List<EventObject>>(){});
 
             // If an internal error occurred
             if (eventObjects == null) {
