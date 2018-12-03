@@ -1,4 +1,4 @@
-# GECo4J [![](https://jitpack.io/v/VSETH-GECO/GECo4J.svg)]() [![Jenkins](https://jenkins.stammgruppe.eu/job/GECo4J/job/master/badge/icon)](https://jenkins.stammgruppe.eu/blue/organizations/jenkins/GECo4J/activity?branch=master)
+# GECo4J [![](https://jitpack.io/v/VSETH-GECO/GECo4J.svg)](https://jitpack.io/#VSETH-GECO/GECo4J) [![Jenkins](https://jenkins.stammgruppe.eu/job/GECo4J/job/master/badge/icon)](https://jenkins.stammgruppe.eu/blue/organizations/jenkins/GECo4J/activity?branch=master)
 Java Interface for the [GECo API](https://geco.ethz.ch/api/) written in Java 8.
 
 You can find the latest builds on [JitPack](https://jitpack.io/#VSETH-GECO/GECo4J) or here on GitHub.
