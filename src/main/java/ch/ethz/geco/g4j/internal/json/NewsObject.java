@@ -5,6 +5,7 @@ public class NewsObject {
     public String description;
     public String url;
     public Boolean is_draft;
+    public Long published_at;
     public AuthorObject author;
     public FooterObject footer;
 

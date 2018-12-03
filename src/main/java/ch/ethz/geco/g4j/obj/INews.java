@@ -37,6 +37,13 @@ public interface INews {
     Boolean isDraft();
 
     /**
+     * Gets the time when the news post was published as a UNIX timestamp.
+     *
+     * @return The UNIX time when the news post was published or null if it is a draft.
+     */
+    Long getPublishedAt();
+
+    /**
      * Gets the username on the website.
      *
      * @return The username of the author.

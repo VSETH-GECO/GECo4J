@@ -101,7 +101,7 @@ public class GECoUtils {
      * @return The converted news object.
      */
     public static INews getNewsFromJSON(@NotNull NewsObject newsObject) {
-        return new News(newsObject.title,newsObject.description,newsObject.url,newsObject.is_draft,newsObject.author.name, newsObject.author.url, newsObject.author.icon_url, newsObject.footer.text);
+        return new News(newsObject.title, newsObject.description, newsObject.url, newsObject.is_draft, newsObject.published_at, newsObject.author.name, newsObject.author.url, newsObject.author.icon_url, newsObject.footer.text);
     }
 
     /**
