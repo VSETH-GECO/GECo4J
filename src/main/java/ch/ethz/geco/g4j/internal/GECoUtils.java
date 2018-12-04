@@ -62,21 +62,26 @@ public class GECoUtils {
      */
     public static ILanUser getLanUserFromJSON(@NotNull IGECoClient client, @NotNull LanUserObject lanUserObject) {
         ILanUser.Status status;
-        switch (lanUserObject.status_code) {
-            case 0:
-                status = ILanUser.Status.AWAITING_PAYMENT;
-                break;
-            case 1:
-                status = ILanUser.Status.PAID_NO_SEAT;
-                break;
-            case 2:
-                status = ILanUser.Status.PAID_WITH_SEAT;
-                break;
-            case 3:
-                status = ILanUser.Status.CHECKED_IN;
-            default:
-                GECo4J.LOGGER.error(LogMarkers.API, "Unknown seat status: {}", lanUserObject.status);
-                status = null;
+
+        if (lanUserObject.status_code == null) {
+            status = ILanUser.Status.AWAITING_REGISTRATION;
+        } else {
+            switch (lanUserObject.status_code) {
+                case 0:
+                    status = ILanUser.Status.AWAITING_PAYMENT;
+                    break;
+                case 1:
+                    status = ILanUser.Status.PAID_NO_SEAT;
+                    break;
+                case 2:
+                    status = ILanUser.Status.PAID_WITH_SEAT;
+                    break;
+                case 3:
+                    status = ILanUser.Status.CHECKED_IN;
+                default:
+                    GECo4J.LOGGER.error(LogMarkers.API, "Unknown seat status: {}", lanUserObject.status);
+                    status = null;
+            }
         }
 
         return new LanUser(client, lanUserObject.id, lanUserObject.status, status, lanUserObject.username, lanUserObject.first_name, lanUserObject.last_name, lanUserObject.seat, lanUserObject.birthday, lanUserObject.sa_verified, lanUserObject.legi_number, lanUserObject.package_name, lanUserObject.student_association);

@@ -130,6 +130,6 @@ public interface ILanUser {
      * The status of a LAN user.
      */
     enum Status {
-        AWAITING_PAYMENT, PAID_NO_SEAT, PAID_WITH_SEAT, CHECKED_IN
+        AWAITING_REGISTRATION, AWAITING_PAYMENT, PAID_NO_SEAT, PAID_WITH_SEAT, CHECKED_IN
     }
 }
