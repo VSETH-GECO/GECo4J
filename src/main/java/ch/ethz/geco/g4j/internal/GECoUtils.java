@@ -78,6 +78,7 @@ public class GECoUtils {
                     break;
                 case 3:
                     status = ILanUser.Status.CHECKED_IN;
+                    break;
                 default:
                     GECo4J.LOGGER.error(LogMarkers.API, "Unknown seat status: {}", lanUserObject.status);
                     status = null;
