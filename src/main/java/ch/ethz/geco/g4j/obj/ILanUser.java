@@ -57,7 +57,7 @@ public interface ILanUser {
      *
      * @return The seat name of the LAN user.
      */
-    String getSeatName(); // TODO: Possible to replace with Seat Object
+    Optional<String> getSeatName(); // TODO: Possible to replace with Seat Object
 
     /**
      * Gets the birthday of the LAN user.
@@ -92,7 +92,7 @@ public interface ILanUser {
      *
      * @return The student association of the LAN user.
      */
-    String getStudentAssoc();
+    Optional<String> getStudentAssoc();
 
     /**
      * Sets the verification status of a LAN user.

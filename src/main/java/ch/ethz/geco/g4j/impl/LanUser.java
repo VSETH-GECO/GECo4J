@@ -77,8 +77,8 @@ public class LanUser implements ILanUser {
     }
 
     @Override
-    public String getSeatName() {
-        return seatName;
+    public Optional<String> getSeatName() {
+        return Optional.ofNullable(seatName);
     }
 
     @Override
@@ -102,8 +102,8 @@ public class LanUser implements ILanUser {
     }
 
     @Override
-    public String getStudentAssoc() {
-        return studentAssoc;
+    public Optional<String> getStudentAssoc() {
+        return Optional.ofNullable(studentAssoc);
     }
 
     @Override
