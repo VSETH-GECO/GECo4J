@@ -6,6 +6,7 @@ import ch.ethz.geco.g4j.util.GECoException;
 import ch.ethz.geco.g4j.util.LogMarkers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
@@ -244,7 +245,16 @@ public class Requests {
                     data = EntityUtils.toString(response.getEntity());
 
                 if (responseCode == 403 || responseCode == 404 || responseCode == 424) {
-                    throw GECoUtils.MAPPER.readValue(data, APIException.class);
+                    JsonNode jsonNode = GECoUtils.MAPPER.readTree(data);
+
+                    JsonNode message = jsonNode.get("message");
+                    JsonNode code = jsonNode.get("code");
+
+                    if (code == null) {
+                        throw new GECoException("Error on request to " + request.getURI() + ". Received response code " + responseCode + ". With response text: " + data);
+                    }
+
+                    throw new APIException(message != null ? message.asText() : "None", code.asInt());
                 } else if (responseCode < 200 || responseCode > 299) {
                     throw new GECoException("Error on request to " + request.getURI() + ". Received response code " + responseCode + ". With response text: " + data);
                 }

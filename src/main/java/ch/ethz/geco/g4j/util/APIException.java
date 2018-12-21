@@ -14,7 +14,7 @@ public class APIException extends RuntimeException {
         this.message = message;
 
         switch (code) {
-            case 400:
+            case 404:
                 this.error = Error.NOT_FOUND;
                 break;
             case 403:
