@@ -19,7 +19,7 @@ Add the following to your `pom.xml`:
     <dependency>
         <groupId>com.github.VSETH-GECO</groupId>
     	<artifactId>GECo4J</artifactId>
-    	<version>0.9.4</version> <!-- Or use any other version including commit hashes -->
+    	<version>0.9.5</version> <!-- Or use any other version including commit hashes -->
     </dependency>
 </dependencies>
 ```
@@ -34,7 +34,7 @@ You can get a shaded jar on [Jenkins](https://jenkins.stammgruppe.eu/blue/organi
 
 ## Usage
 #### Resources
-* [Latest Release Javadocs](https://jitpack.io/com/github/VSETH-GECO/GECo4J/0.9.4/javadoc/)
+* [Latest Release Javadocs](https://jitpack.io/com/github/VSETH-GECO/GECo4J/0.9.5/javadoc/)
 * [Latest Master Javadocs](https://jitpack.io/com/github/VSETH-GECO/GECo4J/master-SNAPSHOT/javadoc/)
 * [Latest Dev Javadocs](https://jitpack.io/com/github/VSETH-GECO/GECo4J/dev-SNAPSHOT/javadoc/)
 
@@ -44,17 +44,17 @@ Alternatively you can fetch the Javadocs of a specific version or commit by past
 #### Tutorial
 The first thing you have to do, is to construct a `GECo4JClient` using your API token:
 ```java
-IGECoClient gecoClient = new GECoClient(<API Token>);
+GECoClient gecoClient = new DefaultGECoClient(<API Token>);
 ```
-Then you can look at the [Javadocs](https://jitpack.io/com/github/VSETH-GECO/GECo4J/0.9.4/javadoc/) to see what you can do with a `IGECoClient`.
+Then you can look at the [Javadocs](https://jitpack.io/com/github/VSETH-GECO/GECo4J/0.9.5/javadoc/) to see what you can do with a `IGECoClient`.
 For example print the titles of the first page of events:
 ```java
 class Example {
     public static void main(String[] args){
-        IGECoClient gecoClient = new GECoClient("this is your token");
+        GECoClient gecoClient = new DefaultGECoClient("this is your token");
         
-        List<IEvent> events = gecoClient.getEvents(1);
-        for (IEvent event : events) {
+        List<Event> events = gecoClient.getEvents(1);
+        for (Event event : events) {
             System.out.println(event.getTitle());
         }
     }
