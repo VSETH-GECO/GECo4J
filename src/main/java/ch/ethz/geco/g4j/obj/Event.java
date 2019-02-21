@@ -1,6 +1,6 @@
 package ch.ethz.geco.g4j.obj;
 
-public interface IEvent {
+public interface Event {
     /**
      * Gets the ID of the event post.
      *

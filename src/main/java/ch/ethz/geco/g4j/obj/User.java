@@ -5,7 +5,7 @@ import java.util.Optional;
 /**
  * Represents a user on the website.
  */
-public interface IUser {
+public interface User {
     /**
      * Gets the user ID of the user on the website.
      *

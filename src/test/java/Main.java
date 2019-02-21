@@ -1,12 +1,12 @@
-import ch.ethz.geco.g4j.impl.GECoClient;
-import ch.ethz.geco.g4j.obj.IGECoClient;
-import ch.ethz.geco.g4j.obj.IUser;
+import ch.ethz.geco.g4j.impl.DefaultGECoClient;
+import ch.ethz.geco.g4j.obj.GECoClient;
+import ch.ethz.geco.g4j.obj.User;
 
 public class Main {
     public static void main(String[] args) {
-        IGECoClient gecoClient = new GECoClient("");
+        GECoClient gecoClient = new DefaultGECoClient("");
 
-        IUser user = gecoClient.getUserByID(1L);
+        User user = gecoClient.getUserByID(1L);
 
         System.out.println(user.getUserName());
     }

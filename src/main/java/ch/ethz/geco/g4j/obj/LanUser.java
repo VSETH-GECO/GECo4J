@@ -6,7 +6,7 @@ import java.util.Optional;
 /**
  * Represents a user on a LAN event.
  */
-public interface ILanUser {
+public interface LanUser {
     /**
      * Gets the user ID of the LAN user.
      *
@@ -57,7 +57,7 @@ public interface ILanUser {
      *
      * @return The seat name of the LAN user.
      */
-    Optional<String> getSeatName(); // TODO: Possible to replace with Seat Object
+    Optional<String> getSeatName(); // TODO: Possible to replace with WebSeat Object
 
     /**
      * Gets the birthday of the LAN user.
@@ -116,7 +116,7 @@ public interface ILanUser {
      *
      * @return A list of all borrowed items of the LAN user.
      */
-    List<IBorrowedItem> getBorrowedItems();
+    List<BorrowedItem> getBorrowedItems();
 
     /**
      * Borrows a new item for the LAN user.
@@ -124,7 +124,7 @@ public interface ILanUser {
      * @param name The name of the item to borrow.
      * @return The newly borrowed item.
      */
-    IBorrowedItem borrowItem(String name);
+    BorrowedItem borrowItem(String name);
 
     /**
      * The status of a LAN user.

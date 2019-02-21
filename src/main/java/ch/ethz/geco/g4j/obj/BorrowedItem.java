@@ -1,6 +1,6 @@
 package ch.ethz.geco.g4j.obj;
 
-public interface IBorrowedItem {
+public interface BorrowedItem {
     /**
      * Gets the ID of the borrowed item.
      *

@@ -13,14 +13,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GECoClient implements IGECoClient {
+public class DefaultGECoClient implements GECoClient {
     /**
      * The requests holder object.
      */
     public final Requests REQUESTS = new Requests(this);
     private final String apiToken;
 
-    public GECoClient(String apiToken) {
+    public DefaultGECoClient(String apiToken) {
         GECo4J.LOGGER.info(LogMarkers.MAIN, "Creating new client with API token: " + apiToken);
         this.apiToken = apiToken;
     }
@@ -31,7 +31,7 @@ public class GECoClient implements IGECoClient {
     }
 
     @Override
-    public IUser getUserByID(Long id) {
+    public User getUserByID(Long id) {
         try {
             UserObject userObject = REQUESTS.GET.makeRequest(Endpoints.BASE + "/user/" + id, UserObject.class);
 
@@ -42,9 +42,8 @@ public class GECoClient implements IGECoClient {
 
             return GECoUtils.getUserFromJSON(userObject);
         } catch (APIException e) {
-            switch (e.getError()) {
-                case NOT_FOUND:
-                    return null;
+            if (e.getError() == APIException.Error.NOT_FOUND) {
+                return null;
             }
         }
 
@@ -53,7 +52,7 @@ public class GECoClient implements IGECoClient {
     }
 
     @Override
-    public IUser getUserByDiscordID(Long id) {
+    public User getUserByDiscordID(Long id) {
         try {
             UserObject userObject = REQUESTS.GET.makeRequest(Endpoints.BASE + "/user/discord/" + id, UserObject.class);
 
@@ -64,9 +63,8 @@ public class GECoClient implements IGECoClient {
 
             return GECoUtils.getUserFromJSON(userObject);
         } catch (APIException e) {
-            switch (e.getError()) {
-                case NOT_FOUND:
-                    return null;
+            if (e.getError() == APIException.Error.NOT_FOUND) {
+                return null;
             }
         }
 
@@ -75,7 +73,7 @@ public class GECoClient implements IGECoClient {
     }
 
     @Override
-    public List<ISeat> getSeats() {
+    public List<Seat> getSeats() {
         try {
             List<SeatObject> seatObjects = REQUESTS.GET.makeRequest(Endpoints.BASE + "/lan/seats", new TypeReference<List<SeatObject>>() {
             });
@@ -85,14 +83,13 @@ public class GECoClient implements IGECoClient {
                 return null;
             }
 
-            List<ISeat> seats = new ArrayList<>();
+            List<Seat> seats = new ArrayList<>();
             seatObjects.forEach(seatObject -> seats.add(GECoUtils.getSeatFromJSON(seatObject)));
 
             return seats;
         } catch (APIException e) {
-            switch (e.getError()) {
-                case NOT_FOUND:
-                    return new ArrayList<>();
+            if (e.getError() == APIException.Error.NOT_FOUND) {
+                return new ArrayList<>();
             }
         }
 
@@ -101,7 +98,7 @@ public class GECoClient implements IGECoClient {
     }
 
     @Override
-    public ISeat getSeatByID(Long id) {
+    public Seat getSeatByID(Long id) {
         try {
             SeatObject seatObject = REQUESTS.GET.makeRequest(Endpoints.BASE + "/lan/seats/" + id, SeatObject.class);
 
@@ -112,9 +109,8 @@ public class GECoClient implements IGECoClient {
 
             return GECoUtils.getSeatFromJSON(seatObject);
         } catch (APIException e) {
-            switch (e.getError()) {
-                case NOT_FOUND:
-                    return null;
+            if (e.getError() == APIException.Error.NOT_FOUND) {
+                return null;
             }
         }
 
@@ -123,7 +119,7 @@ public class GECoClient implements IGECoClient {
     }
 
     @Override
-    public ILanUser getLanUserByID(Long id) {
+    public LanUser getLanUserByID(Long id) {
         try {
             LanUserObject lanUserObject = REQUESTS.GET.makeRequest(Endpoints.BASE + "/lan/user/" + id, LanUserObject.class);
 
@@ -134,9 +130,8 @@ public class GECoClient implements IGECoClient {
 
             return GECoUtils.getLanUserFromJSON(this, lanUserObject);
         } catch (APIException e) {
-            switch (e.getError()) {
-                case NOT_FOUND:
-                    return null;
+            if (e.getError() == APIException.Error.NOT_FOUND) {
+                return null;
             }
         }
 
@@ -145,7 +140,7 @@ public class GECoClient implements IGECoClient {
     }
 
     @Override
-    public ILanUser getLanUserByName(String name) {
+    public LanUser getLanUserByName(String name) {
         try {
             LanUserObject lanUserObject = REQUESTS.GET.makeRequest(Endpoints.BASE + "/lan/search/user/" + name, LanUserObject.class);
 
@@ -156,9 +151,8 @@ public class GECoClient implements IGECoClient {
 
             return GECoUtils.getLanUserFromJSON(this, lanUserObject);
         } catch (APIException e) {
-            switch (e.getError()) {
-                case NOT_FOUND:
-                    return null;
+            if (e.getError() == APIException.Error.NOT_FOUND) {
+                return null;
             }
         }
 
@@ -167,7 +161,7 @@ public class GECoClient implements IGECoClient {
     }
 
     @Override
-    public ISeat getSeatByName(String name) {
+    public Seat getSeatByName(String name) {
         try {
             SeatObject seatObject = REQUESTS.GET.makeRequest(Endpoints.BASE + "/lan/search/seats/" + name, SeatObject.class);
 
@@ -178,9 +172,8 @@ public class GECoClient implements IGECoClient {
 
             return GECoUtils.getSeatFromJSON(seatObject);
         } catch (APIException e) {
-            switch (e.getError()) {
-                case NOT_FOUND:
-                    return null;
+            if (e.getError() == APIException.Error.NOT_FOUND) {
+                return null;
             }
         }
 
@@ -189,7 +182,7 @@ public class GECoClient implements IGECoClient {
     }
 
     @Override
-    public INews getNewsByID(Long id) {
+    public News getNewsByID(Long id) {
         try {
             NewsObject newsObject = REQUESTS.GET.makeRequest(Endpoints.BASE + "/web/news/" + id, NewsObject.class);
 
@@ -200,9 +193,8 @@ public class GECoClient implements IGECoClient {
 
             return GECoUtils.getNewsFromJSON(newsObject);
         } catch (APIException e) {
-            switch (e.getError()) {
-                case NOT_FOUND:
-                    return null;
+            if (e.getError() == APIException.Error.NOT_FOUND) {
+                return null;
             }
         }
 
@@ -211,7 +203,7 @@ public class GECoClient implements IGECoClient {
     }
 
     @Override
-    public List<INews> getNews(Integer page) {
+    public List<News> getNews(Integer page) {
         try {
             List<NewsObject> newsObjects = REQUESTS.GET.makeRequest(Endpoints.BASE + "/web/news?page=" + page, new TypeReference<List<NewsObject>>() {
             });
@@ -221,14 +213,13 @@ public class GECoClient implements IGECoClient {
                 return null;
             }
 
-            List<INews> news = new ArrayList<>();
+            List<News> news = new ArrayList<>();
             newsObjects.forEach(newsObject -> news.add(GECoUtils.getNewsFromJSON(newsObject)));
 
             return news;
         } catch (APIException e) {
-            switch (e.getError()) {
-                case NOT_FOUND:
-                    return new ArrayList<>();
+            if (e.getError() == APIException.Error.NOT_FOUND) {
+                return new ArrayList<>();
             }
         }
 
@@ -237,7 +228,7 @@ public class GECoClient implements IGECoClient {
     }
 
     @Override
-    public IEvent getEventByID(Long id) {
+    public Event getEventByID(Long id) {
         try {
             EventObject eventObject = REQUESTS.GET.makeRequest(Endpoints.BASE + "/web/events/" + id, EventObject.class);
 
@@ -248,9 +239,8 @@ public class GECoClient implements IGECoClient {
 
             return GECoUtils.getEventFromJSON(eventObject);
         } catch (APIException e) {
-            switch (e.getError()) {
-                case NOT_FOUND:
-                    return null;
+            if (e.getError() == APIException.Error.NOT_FOUND) {
+                return null;
             }
         }
 
@@ -259,7 +249,7 @@ public class GECoClient implements IGECoClient {
     }
 
     @Override
-    public List<IEvent> getEvents(Integer page) {
+    public List<Event> getEvents(Integer page) {
         try {
             List<EventObject> eventObjects = REQUESTS.GET.makeRequest(Endpoints.BASE + "/web/events?page=" + page, new TypeReference<List<EventObject>>(){});
 
@@ -268,14 +258,13 @@ public class GECoClient implements IGECoClient {
                 return null;
             }
 
-            List<IEvent> events = new ArrayList<>();
+            List<Event> events = new ArrayList<>();
             eventObjects.forEach(eventObject -> events.add(GECoUtils.getEventFromJSON(eventObject)));
 
             return events;
         } catch (APIException e) {
-            switch (e.getError()) {
-                case NOT_FOUND:
-                    return new ArrayList<>();
+            if (e.getError() == APIException.Error.NOT_FOUND) {
+                return new ArrayList<>();
             }
         }
 

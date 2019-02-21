@@ -1,10 +1,10 @@
 package ch.ethz.geco.g4j.impl;
 
-import ch.ethz.geco.g4j.obj.IUser;
+import ch.ethz.geco.g4j.obj.User;
 
 import java.util.Optional;
 
-public class User implements IUser {
+public class WebUser implements User {
     private final Long id;
     private final String username;
     private final String usergroup;
@@ -13,7 +13,7 @@ public class User implements IUser {
     private final String bnetID;
     private final Long discordID;
 
-    public User(Long id, String username, String usergroup, Long lolID, Long steamID, String bnetID, Long discordID) {
+    public WebUser(Long id, String username, String usergroup, Long lolID, Long steamID, String bnetID, Long discordID) {
         this.id = id;
         this.username = username;
         this.usergroup = usergroup;

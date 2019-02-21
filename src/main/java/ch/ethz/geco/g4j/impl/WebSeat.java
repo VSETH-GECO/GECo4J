@@ -1,10 +1,10 @@
 package ch.ethz.geco.g4j.impl;
 
-import ch.ethz.geco.g4j.obj.ISeat;
+import ch.ethz.geco.g4j.obj.Seat;
 
 import java.util.Optional;
 
-public class Seat implements ISeat {
+public class WebSeat implements Seat {
     private final Long id;
     private final Long lanUserID;
     private final Long webUserID;
@@ -12,7 +12,7 @@ public class Seat implements ISeat {
     private final String username;
     private final String seatName;
 
-    public Seat(Long id, Long lanUserID, Long webUserID, Status status, String username, String seatName) {
+    public WebSeat(Long id, Long lanUserID, Long webUserID, Status status, String username, String seatName) {
         this.id = id;
         this.lanUserID = lanUserID;
         this.webUserID = webUserID;

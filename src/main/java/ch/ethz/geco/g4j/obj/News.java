@@ -1,6 +1,6 @@
 package ch.ethz.geco.g4j.obj;
 
-public interface INews {
+public interface News {
     /**
      * Gets the ID of the news post.
      *

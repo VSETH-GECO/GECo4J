@@ -1,11 +1,11 @@
 package ch.ethz.geco.g4j.impl;
 
-import ch.ethz.geco.g4j.obj.IEvent;
+import ch.ethz.geco.g4j.obj.Event;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Event implements IEvent {
+public class WebEvent implements Event {
     private final Long id;
     private final String title;
     private final String description;
@@ -13,7 +13,7 @@ public class Event implements IEvent {
 
     private static final Pattern idPattern = Pattern.compile("/(\\d+)/?");
 
-    public Event(String title, String description, String url) {
+    public WebEvent(String title, String description, String url) {
         this.title = title;
         this.description = description;
         this.url = url;
@@ -23,7 +23,7 @@ public class Event implements IEvent {
         if (matcher.find()) {
             id = Long.valueOf(matcher.group(1));
         } else {
-            throw new RuntimeException("Could not construct Event object: Failed to get ID from URL.");
+            throw new RuntimeException("Could not construct WebEvent object: Failed to get ID from URL.");
         }
     }
 

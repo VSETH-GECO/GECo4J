@@ -1,11 +1,11 @@
 package ch.ethz.geco.g4j.impl;
 
-import ch.ethz.geco.g4j.obj.INews;
+import ch.ethz.geco.g4j.obj.News;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class News implements INews {
+public class WebNews implements News {
     private final Long id;
     private final String title;
     private final String description;
@@ -19,7 +19,7 @@ public class News implements INews {
 
     private static final Pattern idPattern = Pattern.compile("/(\\d+)/?");
 
-    public News(String title, String description, String url, Boolean isDraft, Long publishedAt, String authorName, String authorUrl, String authorIconUrl, String footer) {
+    public WebNews(String title, String description, String url, Boolean isDraft, Long publishedAt, String authorName, String authorUrl, String authorIconUrl, String footer) {
         this.title = title;
         this.description = description;
         this.url = url;
@@ -35,7 +35,7 @@ public class News implements INews {
         if (matcher.find()) {
             id = Long.valueOf(matcher.group(1));
         } else {
-            throw new RuntimeException("Could not construct News object: Failed to get ID from URL.");
+            throw new RuntimeException("Could not construct WebNews object: Failed to get ID from URL.");
         }
     }
 

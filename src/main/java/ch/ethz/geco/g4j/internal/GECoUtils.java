@@ -23,8 +23,8 @@ public class GECoUtils {
      * @param userObject The user JSON object to convert.
      * @return The converted user object.
      */
-    public static IUser getUserFromJSON(@NotNull UserObject userObject) {
-        return new User(userObject.id, userObject.name, userObject.usergroup, userObject.lol, userObject.steam, userObject.bnet, userObject.discord);
+    public static User getUserFromJSON(@NotNull UserObject userObject) {
+        return new WebUser(userObject.id, userObject.name, userObject.usergroup, userObject.lol, userObject.steam, userObject.bnet, userObject.discord);
     }
 
     /**
@@ -33,24 +33,24 @@ public class GECoUtils {
      * @param seatObject The seat object to convert.
      * @return The converted seat object.
      */
-    public static ISeat getSeatFromJSON(@NotNull SeatObject seatObject) {
-        ISeat.Status status;
+    public static Seat getSeatFromJSON(@NotNull SeatObject seatObject) {
+        Seat.Status status;
         switch (seatObject.status) {
             case 0:
-                status = ISeat.Status.FREE;
+                status = Seat.Status.FREE;
                 break;
             case 1:
-                status = ISeat.Status.RESERVED;
+                status = Seat.Status.RESERVED;
                 break;
             case 2:
-                status = ISeat.Status.OCCUPIED;
+                status = Seat.Status.OCCUPIED;
                 break;
             default:
                 GECo4J.LOGGER.error(LogMarkers.API, "Unknown seat status: {}", seatObject.status);
                 status = null;
         }
 
-        return new Seat(seatObject.id, seatObject.lan_user_id, seatObject.web_user_id, status, seatObject.username, seatObject.seat_number);
+        return new WebSeat(seatObject.id, seatObject.lan_user_id, seatObject.web_user_id, status, seatObject.username, seatObject.seat_number);
     }
 
     /**
@@ -60,24 +60,24 @@ public class GECoUtils {
      * @param lanUserObject The lan user object to convert.
      * @return The converted lan user object.
      */
-    public static ILanUser getLanUserFromJSON(@NotNull IGECoClient client, @NotNull LanUserObject lanUserObject) {
-        ILanUser.Status status;
+    public static LanUser getLanUserFromJSON(@NotNull GECoClient client, @NotNull LanUserObject lanUserObject) {
+        LanUser.Status status;
 
         if (lanUserObject.status_code == null) {
-            status = ILanUser.Status.AWAITING_REGISTRATION;
+            status = LanUser.Status.AWAITING_REGISTRATION;
         } else {
             switch (lanUserObject.status_code) {
                 case 0:
-                    status = ILanUser.Status.AWAITING_PAYMENT;
+                    status = LanUser.Status.AWAITING_PAYMENT;
                     break;
                 case 1:
-                    status = ILanUser.Status.PAID_NO_SEAT;
+                    status = LanUser.Status.PAID_NO_SEAT;
                     break;
                 case 2:
-                    status = ILanUser.Status.PAID_WITH_SEAT;
+                    status = LanUser.Status.PAID_WITH_SEAT;
                     break;
                 case 3:
-                    status = ILanUser.Status.CHECKED_IN;
+                    status = LanUser.Status.CHECKED_IN;
                     break;
                 default:
                     GECo4J.LOGGER.error(LogMarkers.API, "Unknown seat status: {}", lanUserObject.status);
@@ -85,7 +85,7 @@ public class GECoUtils {
             }
         }
 
-        return new LanUser(client, lanUserObject.id, lanUserObject.status, status, lanUserObject.username, lanUserObject.first_name, lanUserObject.last_name, lanUserObject.seat, lanUserObject.birthday, lanUserObject.sa_verified, lanUserObject.legi_number, lanUserObject.package_name, lanUserObject.student_association);
+        return new WebLanUser(client, lanUserObject.id, lanUserObject.status, status, lanUserObject.username, lanUserObject.first_name, lanUserObject.last_name, lanUserObject.seat, lanUserObject.birthday, lanUserObject.sa_verified, lanUserObject.legi_number, lanUserObject.package_name, lanUserObject.student_association);
     }
 
     /**
@@ -96,8 +96,8 @@ public class GECoUtils {
      * @param userID             The ID of the user borrowing the item.
      * @return The converted borrowed item object.
      */
-    public static IBorrowedItem getBorrowedItemFromJSON(@NotNull IGECoClient client, @NotNull BorrowedItemObject borrowedItemObject, @NotNull Long userID) {
-        return new BorrowedItem(client, borrowedItemObject.id, userID, borrowedItemObject.name);
+    public static BorrowedItem getBorrowedItemFromJSON(@NotNull GECoClient client, @NotNull BorrowedItemObject borrowedItemObject, @NotNull Long userID) {
+        return new WebBorrowedItem(client, borrowedItemObject.id, userID, borrowedItemObject.name);
     }
 
     /**
@@ -106,8 +106,8 @@ public class GECoUtils {
      * @param newsObject The news object to convert.
      * @return The converted news object.
      */
-    public static INews getNewsFromJSON(@NotNull NewsObject newsObject) {
-        return new News(newsObject.title, newsObject.description, newsObject.url, newsObject.is_draft, newsObject.published_at, newsObject.author.name, newsObject.author.url, newsObject.author.icon_url, newsObject.footer.text);
+    public static News getNewsFromJSON(@NotNull NewsObject newsObject) {
+        return new WebNews(newsObject.title, newsObject.description, newsObject.url, newsObject.is_draft, newsObject.published_at, newsObject.author.name, newsObject.author.url, newsObject.author.icon_url, newsObject.footer.text);
     }
 
     /**
@@ -116,7 +116,7 @@ public class GECoUtils {
      * @param eventObject The event object to convert.
      * @return The converted event object.
      */
-    public static IEvent getEventFromJSON(@NotNull EventObject eventObject) {
-        return new Event(eventObject.title, eventObject.description, eventObject.url);
+    public static Event getEventFromJSON(@NotNull EventObject eventObject) {
+        return new WebEvent(eventObject.title, eventObject.description, eventObject.url);
     }
 }

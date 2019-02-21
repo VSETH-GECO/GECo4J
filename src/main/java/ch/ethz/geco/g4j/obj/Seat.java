@@ -5,7 +5,7 @@ import java.util.Optional;
 /**
  * Represents a single seat on an event.
  */
-public interface ISeat {
+public interface Seat {
     /**
      * Gets the ID of the seat.
      *
@@ -18,14 +18,14 @@ public interface ISeat {
      *
      * @return The user ID of the LAN user.
      */
-    Optional<Long> getLanUserID(); // TODO: Possible to replace with ILanUser
+    Optional<Long> getLanUserID(); // TODO: Possible to replace with LanUser
 
     /**
      * Gets the user ID of the Web user sitting on the seat if available.
      *
      * @return The user ID of the Web user.
      */
-    Optional<Long> getWebUserID(); // TODO: Possible to replace with IUser
+    Optional<Long> getWebUserID(); // TODO: Possible to replace with User
 
     /**
      * Gets the status of the seat.

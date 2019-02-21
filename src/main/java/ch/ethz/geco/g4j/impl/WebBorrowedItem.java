@@ -1,16 +1,16 @@
 package ch.ethz.geco.g4j.impl;
 
 import ch.ethz.geco.g4j.internal.Endpoints;
-import ch.ethz.geco.g4j.obj.IBorrowedItem;
-import ch.ethz.geco.g4j.obj.IGECoClient;
+import ch.ethz.geco.g4j.obj.BorrowedItem;
+import ch.ethz.geco.g4j.obj.GECoClient;
 
-public class BorrowedItem implements IBorrowedItem {
-    private final IGECoClient client;
+public class WebBorrowedItem implements BorrowedItem {
+    private final GECoClient client;
     private final Long id;
     private final Long userID;
     private final String name;
 
-    public BorrowedItem(IGECoClient client, Long id, Long userID, String name) {
+    public WebBorrowedItem(GECoClient client, Long id, Long userID, String name) {
         this.client = client;
         this.id = id;
         this.userID = userID;
@@ -30,6 +30,6 @@ public class BorrowedItem implements IBorrowedItem {
     @Override
     public void remove() {
         // TODO: improve error handling
-        ((GECoClient) client).REQUESTS.DELETE.makeRequest(Endpoints.BASE + "/lan/user/" + userID + "/items/" + id);
+        ((DefaultGECoClient) client).REQUESTS.DELETE.makeRequest(Endpoints.BASE + "/lan/user/" + userID + "/items/" + id);
     }
 }

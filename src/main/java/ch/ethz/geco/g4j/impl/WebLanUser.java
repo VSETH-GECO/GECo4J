@@ -4,9 +4,9 @@ import ch.ethz.geco.g4j.GECo4J;
 import ch.ethz.geco.g4j.internal.Endpoints;
 import ch.ethz.geco.g4j.internal.GECoUtils;
 import ch.ethz.geco.g4j.internal.json.*;
-import ch.ethz.geco.g4j.obj.IBorrowedItem;
-import ch.ethz.geco.g4j.obj.IGECoClient;
-import ch.ethz.geco.g4j.obj.ILanUser;
+import ch.ethz.geco.g4j.obj.BorrowedItem;
+import ch.ethz.geco.g4j.obj.GECoClient;
+import ch.ethz.geco.g4j.obj.LanUser;
 import ch.ethz.geco.g4j.util.LogMarkers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class LanUser implements ILanUser {
-    private final IGECoClient client;
+public class WebLanUser implements LanUser {
+    private final GECoClient client;
     private final Long id;
     private final String statusMessage;
     private final Status status;
@@ -30,7 +30,7 @@ public class LanUser implements ILanUser {
     private final String lanPackage;
     private final String studentAssoc;
 
-    public LanUser(IGECoClient client, Long id, String statusMessage, Status status, String username, String firstName, String lastName, String seatName, Long birthday, Boolean isVerified, String legiNumber, String lanPackage, String studentAssoc) {
+    public WebLanUser(GECoClient client, Long id, String statusMessage, Status status, String username, String firstName, String lastName, String seatName, Long birthday, Boolean isVerified, String legiNumber, String lanPackage, String studentAssoc) {
         this.client = client;
         this.id = id;
         this.statusMessage = statusMessage;
@@ -109,7 +109,7 @@ public class LanUser implements ILanUser {
     @Override
     public Boolean setVerification(Boolean isVerified, String legiNumber) {
         try {
-            LanUserObject lanUserObject = ((GECoClient) client).REQUESTS.PATCH.makeRequest(Endpoints.BASE + "/lan/user/" + id + "/verify", GECoUtils.MAPPER.writeValueAsString(new VerifyRequest(isVerified, legiNumber)), LanUserObject.class);
+            LanUserObject lanUserObject = ((DefaultGECoClient) client).REQUESTS.PATCH.makeRequest(Endpoints.BASE + "/lan/user/" + id + "/verify", GECoUtils.MAPPER.writeValueAsString(new VerifyRequest(isVerified, legiNumber)), LanUserObject.class);
 
             // Internal error occurred
             if (lanUserObject == null) {
@@ -128,7 +128,7 @@ public class LanUser implements ILanUser {
     @Override
     public Boolean checkin(String checkinString) {
         try {
-            LanUserObject lanUserObject = ((GECoClient) client).REQUESTS.PATCH.makeRequest(Endpoints.BASE + "/lan/user/" + id + "/checkin", GECoUtils.MAPPER.writeValueAsString(new CheckinRequest(checkinString)), LanUserObject.class);
+            LanUserObject lanUserObject = ((DefaultGECoClient) client).REQUESTS.PATCH.makeRequest(Endpoints.BASE + "/lan/user/" + id + "/checkin", GECoUtils.MAPPER.writeValueAsString(new CheckinRequest(checkinString)), LanUserObject.class);
 
             // Internal error occurred
             if (lanUserObject == null) {
@@ -145,8 +145,8 @@ public class LanUser implements ILanUser {
     }
 
     @Override
-    public List<IBorrowedItem> getBorrowedItems() {
-        List<BorrowedItemObject> borrowedItemObjects = ((GECoClient) client).REQUESTS.GET.makeRequest(Endpoints.BASE + "/lan/user" + id + "/items", new TypeReference<List<BorrowedItemObject>>(){});
+    public List<BorrowedItem> getBorrowedItems() {
+        List<BorrowedItemObject> borrowedItemObjects = ((DefaultGECoClient) client).REQUESTS.GET.makeRequest(Endpoints.BASE + "/lan/user" + id + "/items", new TypeReference<List<BorrowedItemObject>>(){});
 
         // Internal error occurred
         if (borrowedItemObjects == null) {
@@ -154,16 +154,16 @@ public class LanUser implements ILanUser {
             return null;
         }
 
-        List<IBorrowedItem> borrowedItems = new ArrayList<>();
+        List<BorrowedItem> borrowedItems = new ArrayList<>();
         borrowedItemObjects.forEach(borrowedItemObject -> borrowedItems.add(GECoUtils.getBorrowedItemFromJSON(client, borrowedItemObject, id)));
 
         return borrowedItems;
     }
 
     @Override
-    public IBorrowedItem borrowItem(String name) {
+    public BorrowedItem borrowItem(String name) {
         try {
-            BorrowedItemObject borrowedItemObject = ((GECoClient) client).REQUESTS.POST.makeRequest(Endpoints.BASE + "/lan/user/"+id+"/items", GECoUtils.MAPPER.writeValueAsString(new BorrowItemRequest(name)), BorrowedItemObject.class);
+            BorrowedItemObject borrowedItemObject = ((DefaultGECoClient) client).REQUESTS.POST.makeRequest(Endpoints.BASE + "/lan/user/"+id+"/items", GECoUtils.MAPPER.writeValueAsString(new BorrowItemRequest(name)), BorrowedItemObject.class);
 
             // Internal error occurred
             if (borrowedItemObject == null) {

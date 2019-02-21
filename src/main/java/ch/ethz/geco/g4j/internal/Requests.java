@@ -1,6 +1,6 @@
 package ch.ethz.geco.g4j.internal;
 
-import ch.ethz.geco.g4j.obj.IGECoClient;
+import ch.ethz.geco.g4j.obj.GECoClient;
 import ch.ethz.geco.g4j.util.APIException;
 import ch.ethz.geco.g4j.util.GECoException;
 import ch.ethz.geco.g4j.util.LogMarkers;
@@ -52,7 +52,7 @@ public class Requests {
      *
      * @param client The GECo client, can be null if no API key is needed.
      */
-    public Requests(IGECoClient client) {
+    public Requests(GECoClient client) {
         POST = new Request(HttpPost.class, client);
         GET = new Request(HttpGet.class, client);
         DELETE = new Request(HttpDelete.class, client);
@@ -69,9 +69,9 @@ public class Requests {
         /**
          * The client used for these requests.
          */
-        private final IGECoClient client;
+        private final GECoClient client;
 
-        private Request(Class<? extends HttpUriRequest> requestClass, IGECoClient client) {
+        private Request(Class<? extends HttpUriRequest> requestClass, GECoClient client) {
             this.requestClass = requestClass;
             this.client = client;
         }
