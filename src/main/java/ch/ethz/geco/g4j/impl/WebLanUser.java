@@ -172,6 +172,21 @@ public class WebLanUser implements LanUser {
     }
 
     @Override
+    public Optional<BorrowedItem> getBorrowedItemByID(Long id) {
+        List<BorrowedItem> borrowedItems = getBorrowedItems();
+
+        if (!borrowedItems.isEmpty()) {
+            for (BorrowedItem borrowedItem : borrowedItems) {
+                if (borrowedItem.getID().equals(id)) {
+                    return Optional.of(borrowedItem);
+                }
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
     public BorrowedItem borrowItem(String name) {
         try {
             BorrowedItemObject borrowedItemObject = ((DefaultGECoClient) client).REQUESTS.POST.makeRequest(Endpoints.BASE + "/lan/user/" + id + "/items", GECoUtils.MAPPER.writeValueAsString(new BorrowItemRequest(name)), BorrowedItemObject.class);

@@ -126,6 +126,14 @@ public interface LanUser {
     List<BorrowedItem> getBorrowedItems();
 
     /**
+     * Gets a borrowed item by its ID.
+     *
+     * @param id The ID of the borrowed item to get.
+     * @return The borrowed item with the given ID.
+     */
+    Optional<BorrowedItem> getBorrowedItemByID(Long id);
+
+    /**
      * Borrows a new item for the LAN user.
      *
      * @param name The name of the item to borrow.
