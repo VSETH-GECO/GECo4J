@@ -44,6 +44,11 @@ public class WebLanUser implements LanUser {
         this.legiNumber = legiNumber;
         this.lanPackage = lanPackage;
         this.studentAssoc = studentAssoc;
+
+        // Automatically verify external users
+        if (lanPackage.equalsIgnoreCase("external")) {
+            setVerification(true, "none");
+        }
     }
 
     @Override
