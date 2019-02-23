@@ -8,9 +8,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -45,7 +46,7 @@ public class Requests {
     /**
      * The HTTP client used for accessing the API
      */
-    private final CloseableHttpClient httpClient = HttpClients.createDefault();
+    private HttpClient httpClient;
 
     /**
      * Constructs a new Request holder.
@@ -53,6 +54,18 @@ public class Requests {
      * @param client The GECo client, can be null if no API key is needed.
      */
     public Requests(GECoClient client) {
+        httpClient = HttpClients.createDefault();
+
+        POST = new Request(HttpPost.class, client);
+        GET = new Request(HttpGet.class, client);
+        DELETE = new Request(HttpDelete.class, client);
+        PATCH = new Request(HttpPatch.class, client);
+        PUT = new Request(HttpPut.class, client);
+    }
+
+    public Requests(GECoClient client, HttpClient httpClient) {
+        this.httpClient = httpClient;
+
         POST = new Request(HttpPost.class, client);
         GET = new Request(HttpGet.class, client);
         DELETE = new Request(HttpDelete.class, client);
@@ -237,7 +250,8 @@ public class Requests {
             if (client != null)
                 request.addHeader("X-API-KEY", client.getAPIToken());
 
-            try (CloseableHttpResponse response = httpClient.execute(request)) {
+            try {
+                HttpResponse response = httpClient.execute(request);
                 int responseCode = response.getStatusLine().getStatusCode();
 
                 String data = null;

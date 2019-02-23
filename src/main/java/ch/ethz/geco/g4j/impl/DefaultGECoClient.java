@@ -9,6 +9,7 @@ import ch.ethz.geco.g4j.obj.*;
 import ch.ethz.geco.g4j.util.APIException;
 import ch.ethz.geco.g4j.util.LogMarkers;
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.apache.http.client.HttpClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +18,17 @@ public class DefaultGECoClient implements GECoClient {
     /**
      * The requests holder object.
      */
-    public final Requests REQUESTS = new Requests(this);
+    public final Requests REQUESTS;
     private final String apiToken;
 
     public DefaultGECoClient(String apiToken) {
+        REQUESTS = new Requests(this);
+        GECo4J.LOGGER.info(LogMarkers.MAIN, "Creating new client with API token: " + apiToken);
+        this.apiToken = apiToken;
+    }
+
+    public DefaultGECoClient(String apiToken, HttpClient httpClient) {
+        REQUESTS = new Requests(this, httpClient);
         GECo4J.LOGGER.info(LogMarkers.MAIN, "Creating new client with API token: " + apiToken);
         this.apiToken = apiToken;
     }
