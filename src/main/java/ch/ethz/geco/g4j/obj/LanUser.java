@@ -52,6 +52,13 @@ public interface LanUser {
     String getLastName();
 
     /**
+     * Gets the full name of the LAN user.
+     *
+     * @return The full name of the LAN user.
+     */
+    String getFullName();
+
+    /**
      * Gets the seat name of the LAN user.
      * This is NOT the seat ID.
      *

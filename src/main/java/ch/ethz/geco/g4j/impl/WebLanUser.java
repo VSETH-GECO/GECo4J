@@ -77,6 +77,11 @@ public class WebLanUser implements LanUser {
     }
 
     @Override
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+
+    @Override
     public Optional<String> getSeatName() {
         return Optional.ofNullable(seatName);
     }
@@ -146,7 +151,8 @@ public class WebLanUser implements LanUser {
 
     @Override
     public List<BorrowedItem> getBorrowedItems() {
-        List<BorrowedItemObject> borrowedItemObjects = ((DefaultGECoClient) client).REQUESTS.GET.makeRequest(Endpoints.BASE + "/lan/user" + id + "/items", new TypeReference<List<BorrowedItemObject>>(){});
+        List<BorrowedItemObject> borrowedItemObjects = ((DefaultGECoClient) client).REQUESTS.GET.makeRequest(Endpoints.BASE + "/lan/user" + id + "/items", new TypeReference<List<BorrowedItemObject>>() {
+        });
 
         // Internal error occurred
         if (borrowedItemObjects == null) {
@@ -163,7 +169,7 @@ public class WebLanUser implements LanUser {
     @Override
     public BorrowedItem borrowItem(String name) {
         try {
-            BorrowedItemObject borrowedItemObject = ((DefaultGECoClient) client).REQUESTS.POST.makeRequest(Endpoints.BASE + "/lan/user/"+id+"/items", GECoUtils.MAPPER.writeValueAsString(new BorrowItemRequest(name)), BorrowedItemObject.class);
+            BorrowedItemObject borrowedItemObject = ((DefaultGECoClient) client).REQUESTS.POST.makeRequest(Endpoints.BASE + "/lan/user/" + id + "/items", GECoUtils.MAPPER.writeValueAsString(new BorrowItemRequest(name)), BorrowedItemObject.class);
 
             // Internal error occurred
             if (borrowedItemObject == null) {
