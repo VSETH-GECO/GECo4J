@@ -4,6 +4,8 @@ import ch.ethz.geco.g4j.internal.Endpoints;
 import ch.ethz.geco.g4j.obj.BorrowedItem;
 import ch.ethz.geco.g4j.obj.GECoClient;
 
+import java.util.HashMap;
+
 public class WebBorrowedItem implements BorrowedItem {
     private final GECoClient client;
     private final Long id;
@@ -30,6 +32,6 @@ public class WebBorrowedItem implements BorrowedItem {
     @Override
     public void remove() {
         // TODO: improve error handling
-        ((DefaultGECoClient) client).REQUESTS.DELETE.makeRequest(Endpoints.BASE + "/lan/user/" + userID + "/items/" + id);
+        ((DefaultGECoClient) client).REQUESTS.makeRequest("DELETE", Endpoints.BASE + "/lan/user/" + userID + "/items/" + id, new HashMap<>());
     }
 }

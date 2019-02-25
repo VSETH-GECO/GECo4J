@@ -9,9 +9,9 @@ import ch.ethz.geco.g4j.obj.*;
 import ch.ethz.geco.g4j.util.APIException;
 import ch.ethz.geco.g4j.util.LogMarkers;
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.apache.http.client.HttpClient;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class DefaultGECoClient implements GECoClient {
@@ -27,12 +27,6 @@ public class DefaultGECoClient implements GECoClient {
         this.apiToken = apiToken;
     }
 
-    public DefaultGECoClient(String apiToken, HttpClient httpClient) {
-        REQUESTS = new Requests(this, httpClient);
-        GECo4J.LOGGER.info(LogMarkers.MAIN, "Creating new client with API token: " + apiToken);
-        this.apiToken = apiToken;
-    }
-
     @Override
     public String getAPIToken() {
         return apiToken;
@@ -41,7 +35,7 @@ public class DefaultGECoClient implements GECoClient {
     @Override
     public User getUserByID(Long id) {
         try {
-            UserObject userObject = REQUESTS.GET.makeRequest(Endpoints.BASE + "/user/" + id, UserObject.class);
+            UserObject userObject = REQUESTS.makeRequest("GET", Endpoints.BASE + "/user/" + id, UserObject.class, new HashMap<>());
 
             // If an internal error occurred
             if (userObject == null) {
@@ -62,7 +56,7 @@ public class DefaultGECoClient implements GECoClient {
     @Override
     public User getUserByDiscordID(Long id) {
         try {
-            UserObject userObject = REQUESTS.GET.makeRequest(Endpoints.BASE + "/user/discord/" + id, UserObject.class);
+            UserObject userObject = REQUESTS.makeRequest("GET", Endpoints.BASE + "/user/discord/" + id, UserObject.class, new HashMap<>());
 
             // If an internal error occurred
             if (userObject == null) {
@@ -83,8 +77,8 @@ public class DefaultGECoClient implements GECoClient {
     @Override
     public List<Seat> getSeats() {
         try {
-            List<SeatObject> seatObjects = REQUESTS.GET.makeRequest(Endpoints.BASE + "/lan/seats", new TypeReference<List<SeatObject>>() {
-            });
+            List<SeatObject> seatObjects = REQUESTS.makeRequest("GET", Endpoints.BASE + "/lan/seats", new TypeReference<List<SeatObject>>() {
+            }, new HashMap<>());
 
             // If an internal error occurred
             if (seatObjects == null) {
@@ -108,7 +102,7 @@ public class DefaultGECoClient implements GECoClient {
     @Override
     public Seat getSeatByID(Long id) {
         try {
-            SeatObject seatObject = REQUESTS.GET.makeRequest(Endpoints.BASE + "/lan/seats/" + id, SeatObject.class);
+            SeatObject seatObject = REQUESTS.makeRequest("GET", Endpoints.BASE + "/lan/seats/" + id, SeatObject.class, new HashMap<>());
 
             // If an internal error occurred
             if (seatObject == null) {
@@ -129,7 +123,7 @@ public class DefaultGECoClient implements GECoClient {
     @Override
     public LanUser getLanUserByID(Long id) {
         try {
-            LanUserObject lanUserObject = REQUESTS.GET.makeRequest(Endpoints.BASE + "/lan/user/" + id, LanUserObject.class);
+            LanUserObject lanUserObject = REQUESTS.makeRequest("GET", Endpoints.BASE + "/lan/user/" + id, LanUserObject.class, new HashMap<>());
 
             // If an internal error occurred.
             if (lanUserObject == null) {
@@ -150,7 +144,7 @@ public class DefaultGECoClient implements GECoClient {
     @Override
     public LanUser getLanUserByName(String name) {
         try {
-            LanUserObject lanUserObject = REQUESTS.GET.makeRequest(Endpoints.BASE + "/lan/search/user/" + name, LanUserObject.class);
+            LanUserObject lanUserObject = REQUESTS.makeRequest("GET", Endpoints.BASE + "/lan/search/user/" + name, LanUserObject.class, new HashMap<>());
 
             // If an internal error occurred.
             if (lanUserObject == null) {
@@ -171,7 +165,7 @@ public class DefaultGECoClient implements GECoClient {
     @Override
     public Seat getSeatByName(String name) {
         try {
-            SeatObject seatObject = REQUESTS.GET.makeRequest(Endpoints.BASE + "/lan/search/seats/" + name, SeatObject.class);
+            SeatObject seatObject = REQUESTS.makeRequest("GET", Endpoints.BASE + "/lan/search/seats/" + name, SeatObject.class, new HashMap<>());
 
             // If an internal error occurred
             if (seatObject == null) {
@@ -192,7 +186,7 @@ public class DefaultGECoClient implements GECoClient {
     @Override
     public News getNewsByID(Long id) {
         try {
-            NewsObject newsObject = REQUESTS.GET.makeRequest(Endpoints.BASE + "/web/news/" + id, NewsObject.class);
+            NewsObject newsObject = REQUESTS.makeRequest("GET", Endpoints.BASE + "/web/news/" + id, NewsObject.class, new HashMap<>());
 
             // If an internal error occurred
             if (newsObject == null) {
@@ -213,8 +207,8 @@ public class DefaultGECoClient implements GECoClient {
     @Override
     public List<News> getNews(Integer page) {
         try {
-            List<NewsObject> newsObjects = REQUESTS.GET.makeRequest(Endpoints.BASE + "/web/news?page=" + page, new TypeReference<List<NewsObject>>() {
-            });
+            List<NewsObject> newsObjects = REQUESTS.makeRequest("GET", Endpoints.BASE + "/web/news?page=" + page, new TypeReference<List<NewsObject>>() {
+            }, new HashMap<>());
 
             // If an internal error occurred
             if (newsObjects == null) {
@@ -238,7 +232,7 @@ public class DefaultGECoClient implements GECoClient {
     @Override
     public Event getEventByID(Long id) {
         try {
-            EventObject eventObject = REQUESTS.GET.makeRequest(Endpoints.BASE + "/web/events/" + id, EventObject.class);
+            EventObject eventObject = REQUESTS.makeRequest("GET", Endpoints.BASE + "/web/events/" + id, EventObject.class, new HashMap<>());
 
             // If an internal error occurred
             if (eventObject == null) {
@@ -259,7 +253,8 @@ public class DefaultGECoClient implements GECoClient {
     @Override
     public List<Event> getEvents(Integer page) {
         try {
-            List<EventObject> eventObjects = REQUESTS.GET.makeRequest(Endpoints.BASE + "/web/events?page=" + page, new TypeReference<List<EventObject>>(){});
+            List<EventObject> eventObjects = REQUESTS.makeRequest("GET", Endpoints.BASE + "/web/events?page=" + page, new TypeReference<List<EventObject>>() {
+            }, new HashMap<>());
 
             // If an internal error occurred
             if (eventObjects == null) {

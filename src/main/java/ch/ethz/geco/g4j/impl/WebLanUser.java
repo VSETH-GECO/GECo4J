@@ -12,6 +12,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -119,7 +120,7 @@ public class WebLanUser implements LanUser {
     @Override
     public Boolean setVerification(Boolean isVerified, String legiNumber) {
         try {
-            LanUserObject lanUserObject = ((DefaultGECoClient) client).REQUESTS.PATCH.makeRequest(Endpoints.BASE + "/lan/user/" + id + "/verify", GECoUtils.MAPPER.writeValueAsString(new VerifyRequest(isVerified, legiNumber)), LanUserObject.class);
+            LanUserObject lanUserObject = ((DefaultGECoClient) client).REQUESTS.makeRequest("PATCH", Endpoints.BASE + "/lan/user/" + id + "/verify", GECoUtils.MAPPER.writeValueAsString(new VerifyRequest(isVerified, legiNumber)), LanUserObject.class, new HashMap<>());
 
             // Internal error occurred
             if (lanUserObject == null) {
@@ -138,7 +139,7 @@ public class WebLanUser implements LanUser {
     @Override
     public Boolean checkin(String checkinString) {
         try {
-            LanUserObject lanUserObject = ((DefaultGECoClient) client).REQUESTS.PATCH.makeRequest(Endpoints.BASE + "/lan/user/" + id + "/checkin", GECoUtils.MAPPER.writeValueAsString(new CheckinRequest(checkinString)), LanUserObject.class);
+            LanUserObject lanUserObject = ((DefaultGECoClient) client).REQUESTS.makeRequest("PATCH", Endpoints.BASE + "/lan/user/" + id + "/checkin", GECoUtils.MAPPER.writeValueAsString(new CheckinRequest(checkinString)), LanUserObject.class, new HashMap<>());
 
             // Internal error occurred
             if (lanUserObject == null) {
@@ -156,8 +157,8 @@ public class WebLanUser implements LanUser {
 
     @Override
     public List<BorrowedItem> getBorrowedItems() {
-        List<BorrowedItemObject> borrowedItemObjects = ((DefaultGECoClient) client).REQUESTS.GET.makeRequest(Endpoints.BASE + "/lan/user" + id + "/items", new TypeReference<List<BorrowedItemObject>>() {
-        });
+        List<BorrowedItemObject> borrowedItemObjects = ((DefaultGECoClient) client).REQUESTS.makeRequest("GET", Endpoints.BASE + "/lan/user" + id + "/items", new TypeReference<List<BorrowedItemObject>>() {
+        }, new HashMap<>());
 
         // Internal error occurred
         if (borrowedItemObjects == null) {
@@ -189,7 +190,7 @@ public class WebLanUser implements LanUser {
     @Override
     public BorrowedItem borrowItem(String name) {
         try {
-            BorrowedItemObject borrowedItemObject = ((DefaultGECoClient) client).REQUESTS.POST.makeRequest(Endpoints.BASE + "/lan/user/" + id + "/items", GECoUtils.MAPPER.writeValueAsString(new BorrowItemRequest(name)), BorrowedItemObject.class);
+            BorrowedItemObject borrowedItemObject = ((DefaultGECoClient) client).REQUESTS.makeRequest("POST", Endpoints.BASE + "/lan/user/" + id + "/items", GECoUtils.MAPPER.writeValueAsString(new BorrowItemRequest(name)), BorrowedItemObject.class, new HashMap<>());
 
             // Internal error occurred
             if (borrowedItemObject == null) {
