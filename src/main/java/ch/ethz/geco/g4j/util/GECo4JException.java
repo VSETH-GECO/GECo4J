@@ -1,14 +1,14 @@
 package ch.ethz.geco.g4j.util;
 
-public class GECoException extends RuntimeException {
+public class GECo4JException extends RuntimeException {
     private String message;
 
-    public GECoException(String message) {
+    public GECo4JException(String message) {
         super(message);
         this.message = message;
     }
 
-    public GECoException(String message, Throwable cause) {
+    public GECo4JException(String message, Throwable cause) {
         super(message, cause);
         this.message = message;
     }

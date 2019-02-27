@@ -7,7 +7,6 @@ import ch.ethz.geco.g4j.obj.*;
 import ch.ethz.geco.g4j.util.LogMarkers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
-import org.jetbrains.annotations.NotNull;
 
 public class GECoUtils {
     public static final ObjectMapper MAPPER = new ObjectMapper();
@@ -23,7 +22,7 @@ public class GECoUtils {
      * @param userObject The user JSON object to convert.
      * @return The converted user object.
      */
-    public static User getUserFromJSON(@NotNull UserObject userObject) {
+    public static User getUserFromJSON(UserObject userObject) {
         return new WebUser(userObject.id, userObject.name, userObject.usergroup, userObject.lol, userObject.steam, userObject.bnet, userObject.discord);
     }
 
@@ -33,7 +32,7 @@ public class GECoUtils {
      * @param seatObject The seat object to convert.
      * @return The converted seat object.
      */
-    public static Seat getSeatFromJSON(@NotNull SeatObject seatObject) {
+    public static Seat getSeatFromJSON(SeatObject seatObject) {
         Seat.Status status;
         switch (seatObject.status) {
             case 0:
@@ -60,7 +59,7 @@ public class GECoUtils {
      * @param lanUserObject The lan user object to convert.
      * @return The converted lan user object.
      */
-    public static LanUser getLanUserFromJSON(@NotNull GECoClient client, @NotNull LanUserObject lanUserObject) {
+    public static LanUser getLanUserFromJSON(GECoClient client, LanUserObject lanUserObject) {
         LanUser.Status status;
 
         if (lanUserObject.status_code == null) {
@@ -96,7 +95,7 @@ public class GECoUtils {
      * @param userID             The ID of the user borrowing the item.
      * @return The converted borrowed item object.
      */
-    public static BorrowedItem getBorrowedItemFromJSON(@NotNull GECoClient client, @NotNull BorrowedItemObject borrowedItemObject, @NotNull Long userID) {
+    public static BorrowedItem getBorrowedItemFromJSON(GECoClient client, BorrowedItemObject borrowedItemObject, Long userID) {
         return new WebBorrowedItem(client, borrowedItemObject.id, userID, borrowedItemObject.name);
     }
 
@@ -106,7 +105,7 @@ public class GECoUtils {
      * @param newsObject The news object to convert.
      * @return The converted news object.
      */
-    public static News getNewsFromJSON(@NotNull NewsObject newsObject) {
+    public static News getNewsFromJSON(NewsObject newsObject) {
         return new WebNews(newsObject.title, newsObject.description, newsObject.url, newsObject.is_draft, newsObject.published_at, newsObject.author.name, newsObject.author.url, newsObject.author.icon_url, newsObject.footer.text);
     }
 
@@ -116,7 +115,7 @@ public class GECoUtils {
      * @param eventObject The event object to convert.
      * @return The converted event object.
      */
-    public static Event getEventFromJSON(@NotNull EventObject eventObject) {
+    public static Event getEventFromJSON(EventObject eventObject) {
         return new WebEvent(eventObject.title, eventObject.description, eventObject.url);
     }
 }

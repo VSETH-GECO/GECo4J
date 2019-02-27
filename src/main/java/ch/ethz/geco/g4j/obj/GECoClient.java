@@ -1,6 +1,7 @@
 package ch.ethz.geco.g4j.obj;
 
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface GECoClient {
     /**
@@ -16,7 +17,7 @@ public interface GECoClient {
      * @param id The ID of the user to get.
      * @return The user with the provided ID or null if none was found.
      */
-    User getUserByID(Long id);
+    Mono<User> getUserByID(Long id);
 
     /**
      * Gets a user by its Discord ID.
@@ -24,14 +25,14 @@ public interface GECoClient {
      * @param id The Discord ID of the user to get.
      * @return The user with the provided Discord ID or null if none was found.
      */
-    User getUserByDiscordID(Long id);
+    Mono<User> getUserByDiscordID(Long id);
 
     /**
      * Gets a list of all seats of the current LAN event.
      *
      * @return A list of all seats.
      */
-    List<Seat> getSeats();
+    Flux<Seat> getSeats();
 
     /**
      * Gets a seat by its ID.
@@ -39,7 +40,7 @@ public interface GECoClient {
      * @param id The ID of the seat to get.
      * @return The seat with the provided ID or null if none was found.
      */
-    Seat getSeatByID(Long id);
+    Mono<Seat> getSeatByID(Long id);
 
     /**
      * Gets a lan user by its ID.
@@ -47,7 +48,7 @@ public interface GECoClient {
      * @param id The ID of the lan user to get.
      * @return The lan user with the provided ID or null if none was found.
      */
-    LanUser getLanUserByID(Long id);
+    Mono<LanUser> getLanUserByID(Long id);
 
     /**
      * Gets a lan user by its name.
@@ -55,7 +56,7 @@ public interface GECoClient {
      * @param name The name of the lan user to get.
      * @return The lan user with the provided name or null if none was found.
      */
-    LanUser getLanUserByName(String name);
+    Mono<LanUser> getLanUserByName(String name);
 
     /**
      * Gets a seat by its name. If there are duplicate seat names like with admin seats, this will just return
@@ -64,7 +65,7 @@ public interface GECoClient {
      * @param name The name of the seat to get.
      * @return A seat with the provided name or null if none was found.
      */
-    Seat getSeatByName(String name);
+    Mono<Seat> getSeatByName(String name);
 
     /**
      * Gets a single news post by its ID.
@@ -72,7 +73,7 @@ public interface GECoClient {
      * @param id The ID of the news post.
      * @return The news post with the provided ID or null if none was found.
      */
-    News getNewsByID(Long id);
+    Mono<News> getNewsByID(Long id);
 
     /**
      * Gets a page of news posts consisting of 10 news posts in descending order.
@@ -81,7 +82,7 @@ public interface GECoClient {
      * @param page The page to get.
      * @return A list of news posts.
      */
-    List<News> getNews(Integer page);
+    Flux<News> getNews(Integer page);
 
     /**
      * Gets a single event by its ID.
@@ -89,7 +90,7 @@ public interface GECoClient {
      * @param id The ID of the event.
      * @return The event with the provided ID or null if none was found.
      */
-    Event getEventByID(Long id);
+    Mono<Event> getEventByID(Long id);
 
     /**
      * Gets a page of events consisting of 10 events in descending order.
@@ -98,5 +99,5 @@ public interface GECoClient {
      * @param page The page to get.
      * @return A list of events.
      */
-    List<Event> getEvents(Integer page);
+    Flux<Event> getEvents(Integer page);
 }

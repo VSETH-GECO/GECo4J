@@ -1,6 +1,8 @@
 package ch.ethz.geco.g4j.obj;
 
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import java.util.Optional;
 
 /**
@@ -108,7 +110,7 @@ public interface LanUser {
      * @param legiNumber The legi number of the LAN user.
      * @return True if the changes were applied, false otherwise.
      */
-    Boolean setVerification(Boolean isVerified, String legiNumber); // TODO: maybe return status code enum for better error handling
+    Mono<LanUser> setVerification(Boolean isVerified, String legiNumber); // TODO: maybe return status code enum for better error handling
 
     /**
      * Checks a LAN user in if the correct check-in string for that user is provided.
@@ -116,14 +118,14 @@ public interface LanUser {
      * @param checkinString The check-in string of the LAN user.
      * @return True if the user was checked-in, false otherwise.
      */
-    Boolean checkin(String checkinString); // TODO: maybe return status code enum for better error handling
+    Mono<LanUser> checkin(String checkinString); // TODO: maybe return status code enum for better error handling
 
     /**
      * Gets a list of all items a LAN user has currently borrowed.
      *
      * @return A list of all borrowed items of the LAN user.
      */
-    List<BorrowedItem> getBorrowedItems();
+    Flux<BorrowedItem> getBorrowedItems();
 
     /**
      * Gets a borrowed item by its ID.
@@ -131,7 +133,7 @@ public interface LanUser {
      * @param id The ID of the borrowed item to get.
      * @return The borrowed item with the given ID.
      */
-    Optional<BorrowedItem> getBorrowedItemByID(Long id);
+    Mono<BorrowedItem> getBorrowedItemByID(Long id);
 
     /**
      * Borrows a new item for the LAN user.
@@ -139,7 +141,7 @@ public interface LanUser {
      * @param name The name of the item to borrow.
      * @return The newly borrowed item.
      */
-    BorrowedItem borrowItem(String name);
+    Mono<BorrowedItem> borrowItem(String name);
 
     /**
      * The status of a LAN user.

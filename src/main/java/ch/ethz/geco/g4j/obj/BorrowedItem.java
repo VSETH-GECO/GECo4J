@@ -1,5 +1,7 @@
 package ch.ethz.geco.g4j.obj;
 
+import reactor.core.publisher.Mono;
+
 public interface BorrowedItem {
     /**
      * Gets the ID of the borrowed item.
@@ -18,5 +20,5 @@ public interface BorrowedItem {
     /**
      * Removes the item from the list of borrowed items.
      */
-    void remove();
+    Mono<Void> remove();
 }

@@ -1,18 +1,13 @@
 package ch.ethz.geco.g4j.impl;
 
 import ch.ethz.geco.g4j.GECo4J;
-import ch.ethz.geco.g4j.internal.Endpoints;
 import ch.ethz.geco.g4j.internal.GECoUtils;
 import ch.ethz.geco.g4j.internal.Requests;
 import ch.ethz.geco.g4j.internal.json.*;
 import ch.ethz.geco.g4j.obj.*;
-import ch.ethz.geco.g4j.util.APIException;
 import ch.ethz.geco.g4j.util.LogMarkers;
-import com.fasterxml.jackson.core.type.TypeReference;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public class DefaultGECoClient implements GECoClient {
     /**
@@ -33,245 +28,80 @@ public class DefaultGECoClient implements GECoClient {
     }
 
     @Override
-    public User getUserByID(Long id) {
-        try {
-            UserObject userObject = REQUESTS.makeRequest("GET", Endpoints.BASE + "/user/" + id, UserObject.class, new HashMap<>());
-
-            // If an internal error occurred
-            if (userObject == null) {
-                return null;
-            }
-
-            return GECoUtils.getUserFromJSON(userObject);
-        } catch (APIException e) {
-            if (e.getError() == APIException.Error.NOT_FOUND) {
-                return null;
-            }
-        }
-
-        GECo4J.LOGGER.error(LogMarkers.UTIL, "Unknown error occured! Please contact a developer.");
-        return null;
+    public Mono<User> getUserByID(Long id) {
+        return REQUESTS.makeRequest(Requests.METHOD.GET, "/user/" + id, UserObject.class, null).map(GECoUtils::getUserFromJSON);
     }
 
     @Override
-    public User getUserByDiscordID(Long id) {
-        try {
-            UserObject userObject = REQUESTS.makeRequest("GET", Endpoints.BASE + "/user/discord/" + id, UserObject.class, new HashMap<>());
-
-            // If an internal error occurred
-            if (userObject == null) {
-                return null;
-            }
-
-            return GECoUtils.getUserFromJSON(userObject);
-        } catch (APIException e) {
-            if (e.getError() == APIException.Error.NOT_FOUND) {
-                return null;
-            }
-        }
-
-        GECo4J.LOGGER.error(LogMarkers.UTIL, "Unknown error occured! Please contact a developer.");
-        return null;
+    public Mono<User> getUserByDiscordID(Long id) {
+        return REQUESTS.makeRequest(Requests.METHOD.GET, "/user/discord/" + id, UserObject.class, null).map(GECoUtils::getUserFromJSON);
     }
 
     @Override
-    public List<Seat> getSeats() {
-        try {
-            List<SeatObject> seatObjects = REQUESTS.makeRequest("GET", Endpoints.BASE + "/lan/seats", new TypeReference<List<SeatObject>>() {
-            }, new HashMap<>());
-
-            // If an internal error occurred
-            if (seatObjects == null) {
-                return null;
+    public Flux<Seat> getSeats() {
+        return REQUESTS.makeRequest(Requests.METHOD.GET, "/lan/seats", SeatObject[].class, null).flatMapMany(seatObjects -> {
+            Seat[] seats = new Seat[seatObjects.length];
+            for (int i = 0; i < seatObjects.length; i++) {
+                seats[i] = GECoUtils.getSeatFromJSON(seatObjects[i]);
             }
 
-            List<Seat> seats = new ArrayList<>();
-            seatObjects.forEach(seatObject -> seats.add(GECoUtils.getSeatFromJSON(seatObject)));
-
-            return seats;
-        } catch (APIException e) {
-            if (e.getError() == APIException.Error.NOT_FOUND) {
-                return new ArrayList<>();
-            }
-        }
-
-        GECo4J.LOGGER.error(LogMarkers.UTIL, "Unknown error occured! Please contact a developer.");
-        return null;
+            return Flux.fromArray(seats);
+        });
     }
 
     @Override
-    public Seat getSeatByID(Long id) {
-        try {
-            SeatObject seatObject = REQUESTS.makeRequest("GET", Endpoints.BASE + "/lan/seats/" + id, SeatObject.class, new HashMap<>());
-
-            // If an internal error occurred
-            if (seatObject == null) {
-                return null;
-            }
-
-            return GECoUtils.getSeatFromJSON(seatObject);
-        } catch (APIException e) {
-            if (e.getError() == APIException.Error.NOT_FOUND) {
-                return null;
-            }
-        }
-
-        GECo4J.LOGGER.error(LogMarkers.UTIL, "Unknown error occured! Please contact a developer.");
-        return null;
+    public Mono<Seat> getSeatByID(Long id) {
+        return REQUESTS.makeRequest(Requests.METHOD.GET, "/lan/seats/" + id, SeatObject.class, null).map(GECoUtils::getSeatFromJSON);
     }
 
     @Override
-    public LanUser getLanUserByID(Long id) {
-        try {
-            LanUserObject lanUserObject = REQUESTS.makeRequest("GET", Endpoints.BASE + "/lan/user/" + id, LanUserObject.class, new HashMap<>());
-
-            // If an internal error occurred.
-            if (lanUserObject == null) {
-                return null;
-            }
-
-            return GECoUtils.getLanUserFromJSON(this, lanUserObject);
-        } catch (APIException e) {
-            if (e.getError() == APIException.Error.NOT_FOUND) {
-                return null;
-            }
-        }
-
-        GECo4J.LOGGER.error(LogMarkers.UTIL, "Unknown error occured! Please contact a developer.");
-        return null;
+    public Mono<LanUser> getLanUserByID(Long id) {
+        return REQUESTS.makeRequest(Requests.METHOD.GET, "/lan/user/" + id, LanUserObject.class, null)
+                .map(lanUserObject -> GECoUtils.getLanUserFromJSON(this, lanUserObject));
     }
 
     @Override
-    public LanUser getLanUserByName(String name) {
-        try {
-            LanUserObject lanUserObject = REQUESTS.makeRequest("GET", Endpoints.BASE + "/lan/search/user/" + name, LanUserObject.class, new HashMap<>());
-
-            // If an internal error occurred.
-            if (lanUserObject == null) {
-                return null;
-            }
-
-            return GECoUtils.getLanUserFromJSON(this, lanUserObject);
-        } catch (APIException e) {
-            if (e.getError() == APIException.Error.NOT_FOUND) {
-                return null;
-            }
-        }
-
-        GECo4J.LOGGER.error(LogMarkers.UTIL, "Unknown error occured! Please contact a developer.");
-        return null;
+    public Mono<LanUser> getLanUserByName(String name) {
+        return REQUESTS.makeRequest(Requests.METHOD.GET, "/lan/search/user/" + name, LanUserObject.class, null)
+                .map(lanUserObject -> GECoUtils.getLanUserFromJSON(this, lanUserObject));
     }
 
     @Override
-    public Seat getSeatByName(String name) {
-        try {
-            SeatObject seatObject = REQUESTS.makeRequest("GET", Endpoints.BASE + "/lan/search/seats/" + name, SeatObject.class, new HashMap<>());
-
-            // If an internal error occurred
-            if (seatObject == null) {
-                return null;
-            }
-
-            return GECoUtils.getSeatFromJSON(seatObject);
-        } catch (APIException e) {
-            if (e.getError() == APIException.Error.NOT_FOUND) {
-                return null;
-            }
-        }
-
-        GECo4J.LOGGER.error(LogMarkers.UTIL, "Unknown error occured! Please contact a developer.");
-        return null;
+    public Mono<Seat> getSeatByName(String name) {
+        return REQUESTS.makeRequest(Requests.METHOD.GET, "/lan/search/seats/" + name, SeatObject.class, null).map(GECoUtils::getSeatFromJSON);
     }
 
     @Override
-    public News getNewsByID(Long id) {
-        try {
-            NewsObject newsObject = REQUESTS.makeRequest("GET", Endpoints.BASE + "/web/news/" + id, NewsObject.class, new HashMap<>());
-
-            // If an internal error occurred
-            if (newsObject == null) {
-                return null;
-            }
-
-            return GECoUtils.getNewsFromJSON(newsObject);
-        } catch (APIException e) {
-            if (e.getError() == APIException.Error.NOT_FOUND) {
-                return null;
-            }
-        }
-
-        GECo4J.LOGGER.error(LogMarkers.UTIL, "Unknown error occured! Please contact a developer.");
-        return null;
+    public Mono<News> getNewsByID(Long id) {
+        return REQUESTS.makeRequest(Requests.METHOD.GET, "/web/news/" + id, NewsObject.class, null).map(GECoUtils::getNewsFromJSON);
     }
 
     @Override
-    public List<News> getNews(Integer page) {
-        try {
-            List<NewsObject> newsObjects = REQUESTS.makeRequest("GET", Endpoints.BASE + "/web/news?page=" + page, new TypeReference<List<NewsObject>>() {
-            }, new HashMap<>());
-
-            // If an internal error occurred
-            if (newsObjects == null) {
-                return null;
+    public Flux<News> getNews(Integer page) {
+        return REQUESTS.makeRequest(Requests.METHOD.GET, "/web/news?page=" + page, NewsObject[].class, null).flatMapMany(newsObjects -> {
+            News[] news = new News[newsObjects.length];
+            for (int i = 0; i < newsObjects.length; i++) {
+                news[i] = GECoUtils.getNewsFromJSON(newsObjects[i]);
             }
 
-            List<News> news = new ArrayList<>();
-            newsObjects.forEach(newsObject -> news.add(GECoUtils.getNewsFromJSON(newsObject)));
-
-            return news;
-        } catch (APIException e) {
-            if (e.getError() == APIException.Error.NOT_FOUND) {
-                return new ArrayList<>();
-            }
-        }
-
-        GECo4J.LOGGER.error(LogMarkers.UTIL, "Unknown error occured! Please contact a developer.");
-        return null;
+            return Flux.fromArray(news);
+        });
     }
 
     @Override
-    public Event getEventByID(Long id) {
-        try {
-            EventObject eventObject = REQUESTS.makeRequest("GET", Endpoints.BASE + "/web/events/" + id, EventObject.class, new HashMap<>());
-
-            // If an internal error occurred
-            if (eventObject == null) {
-                return null;
-            }
-
-            return GECoUtils.getEventFromJSON(eventObject);
-        } catch (APIException e) {
-            if (e.getError() == APIException.Error.NOT_FOUND) {
-                return null;
-            }
-        }
-
-        GECo4J.LOGGER.error(LogMarkers.UTIL, "Unknown error occured! Please contact a developer.");
-        return null;
+    public Mono<Event> getEventByID(Long id) {
+        return REQUESTS.makeRequest(Requests.METHOD.GET, "/web/events/" + id, EventObject.class, null).map(GECoUtils::getEventFromJSON);
     }
 
     @Override
-    public List<Event> getEvents(Integer page) {
-        try {
-            List<EventObject> eventObjects = REQUESTS.makeRequest("GET", Endpoints.BASE + "/web/events?page=" + page, new TypeReference<List<EventObject>>() {
-            }, new HashMap<>());
-
-            // If an internal error occurred
-            if (eventObjects == null) {
-                return null;
+    public Flux<Event> getEvents(Integer page) {
+        return REQUESTS.makeRequest(Requests.METHOD.GET, "/web/events?page=" + page, EventObject[].class, null).flatMapMany(eventObjects -> {
+            Event[] events = new Event[eventObjects.length];
+            for (int i = 0; i < eventObjects.length; i++) {
+                events[i] = GECoUtils.getEventFromJSON(eventObjects[i]);
             }
 
-            List<Event> events = new ArrayList<>();
-            eventObjects.forEach(eventObject -> events.add(GECoUtils.getEventFromJSON(eventObject)));
-
-            return events;
-        } catch (APIException e) {
-            if (e.getError() == APIException.Error.NOT_FOUND) {
-                return new ArrayList<>();
-            }
-        }
-
-        GECo4J.LOGGER.error(LogMarkers.UTIL, "Unknown error occured! Please contact a developer.");
-        return null;
+            return Flux.fromArray(events);
+        });
     }
 }

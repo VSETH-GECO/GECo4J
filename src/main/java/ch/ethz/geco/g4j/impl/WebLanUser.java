@@ -1,19 +1,15 @@
 package ch.ethz.geco.g4j.impl;
 
-import ch.ethz.geco.g4j.GECo4J;
-import ch.ethz.geco.g4j.internal.Endpoints;
 import ch.ethz.geco.g4j.internal.GECoUtils;
+import ch.ethz.geco.g4j.internal.Requests;
 import ch.ethz.geco.g4j.internal.json.*;
 import ch.ethz.geco.g4j.obj.BorrowedItem;
 import ch.ethz.geco.g4j.obj.GECoClient;
 import ch.ethz.geco.g4j.obj.LanUser;
-import ch.ethz.geco.g4j.util.LogMarkers;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
 
 public class WebLanUser implements LanUser {
@@ -118,91 +114,57 @@ public class WebLanUser implements LanUser {
     }
 
     @Override
-    public Boolean setVerification(Boolean isVerified, String legiNumber) {
+    public Mono<LanUser> setVerification(Boolean isVerified, String legiNumber) {
+        String content;
         try {
-            LanUserObject lanUserObject = ((DefaultGECoClient) client).REQUESTS.makeRequest("PATCH", Endpoints.BASE + "/lan/user/" + id + "/verify", GECoUtils.MAPPER.writeValueAsString(new VerifyRequest(isVerified, legiNumber)), LanUserObject.class, new HashMap<>());
-
-            // Internal error occurred
-            if (lanUserObject == null) {
-                GECo4J.LOGGER.error(LogMarkers.API, "Internal Error! Please contact a developer.");
-                return null;
-            }
-
-            return lanUserObject.sa_verified == isVerified && lanUserObject.legi_number.equals(legiNumber);
+            content = GECoUtils.MAPPER.writeValueAsString(new VerifyRequest(isVerified, legiNumber));
         } catch (JsonProcessingException e) {
-            GECo4J.LOGGER.error(LogMarkers.MAIN, "Internal Error! Please contact a developer.");
-            e.printStackTrace();
-            return false;
+            return Mono.error(e);
         }
+
+        return ((DefaultGECoClient) client).REQUESTS.makeRequest(Requests.METHOD.PATCH, "/lan/user/" + id + "/verify", LanUserObject.class, content)
+                .map(lanUserObject -> GECoUtils.getLanUserFromJSON(client, lanUserObject));
     }
 
     @Override
-    public Boolean checkin(String checkinString) {
+    public Mono<LanUser> checkin(String checkinString) {
+        String content;
         try {
-            LanUserObject lanUserObject = ((DefaultGECoClient) client).REQUESTS.makeRequest("PATCH", Endpoints.BASE + "/lan/user/" + id + "/checkin", GECoUtils.MAPPER.writeValueAsString(new CheckinRequest(checkinString)), LanUserObject.class, new HashMap<>());
-
-            // Internal error occurred
-            if (lanUserObject == null) {
-                GECo4J.LOGGER.error(LogMarkers.API, "Internal Error! Please contact a developer.");
-                return null;
-            }
-
-            return lanUserObject.status_code == 3;
+            content = GECoUtils.MAPPER.writeValueAsString(new CheckinRequest(checkinString));
         } catch (JsonProcessingException e) {
-            GECo4J.LOGGER.error(LogMarkers.MAIN, "Internal Error! Please contact a developer.");
-            e.printStackTrace();
-            return false;
+            return Mono.error(e);
         }
+
+        return ((DefaultGECoClient) client).REQUESTS.makeRequest(Requests.METHOD.PATCH, "/lan/user/" + id + "/checkin", LanUserObject.class, content)
+                .map(lanUserObject -> GECoUtils.getLanUserFromJSON(client, lanUserObject));
     }
 
     @Override
-    public List<BorrowedItem> getBorrowedItems() {
-        List<BorrowedItemObject> borrowedItemObjects = ((DefaultGECoClient) client).REQUESTS.makeRequest("GET", Endpoints.BASE + "/lan/user" + id + "/items", new TypeReference<List<BorrowedItemObject>>() {
-        }, new HashMap<>());
-
-        // Internal error occurred
-        if (borrowedItemObjects == null) {
-            GECo4J.LOGGER.error(LogMarkers.API, "Internal Error! Please contact a developer.");
-            return null;
-        }
-
-        List<BorrowedItem> borrowedItems = new ArrayList<>();
-        borrowedItemObjects.forEach(borrowedItemObject -> borrowedItems.add(GECoUtils.getBorrowedItemFromJSON(client, borrowedItemObject, id)));
-
-        return borrowedItems;
-    }
-
-    @Override
-    public Optional<BorrowedItem> getBorrowedItemByID(Long id) {
-        List<BorrowedItem> borrowedItems = getBorrowedItems();
-
-        if (!borrowedItems.isEmpty()) {
-            for (BorrowedItem borrowedItem : borrowedItems) {
-                if (borrowedItem.getID().equals(id)) {
-                    return Optional.of(borrowedItem);
-                }
+    public Flux<BorrowedItem> getBorrowedItems() {
+        return ((DefaultGECoClient) client).REQUESTS.makeRequest(Requests.METHOD.GET, "/lan/user/" + id + "/items", BorrowedItemObject[].class, null).flatMapMany(borrowedItemObjects -> {
+            BorrowedItem[] borrowedItems = new BorrowedItem[borrowedItemObjects.length];
+            for (int i = 0; i < borrowedItemObjects.length; i++) {
+                borrowedItems[i] = GECoUtils.getBorrowedItemFromJSON(client, borrowedItemObjects[i], id);
             }
-        }
 
-        return Optional.empty();
+            return Flux.fromArray(borrowedItems);
+        });
     }
 
     @Override
-    public BorrowedItem borrowItem(String name) {
+    public Mono<BorrowedItem> getBorrowedItemByID(Long id) {
+        return getBorrowedItems().filter(borrowedItem -> borrowedItem.getID().equals(id)).single();
+    }
+
+    @Override
+    public Mono<BorrowedItem> borrowItem(String name) {
+        String content;
         try {
-            BorrowedItemObject borrowedItemObject = ((DefaultGECoClient) client).REQUESTS.makeRequest("POST", Endpoints.BASE + "/lan/user/" + id + "/items", GECoUtils.MAPPER.writeValueAsString(new BorrowItemRequest(name)), BorrowedItemObject.class, new HashMap<>());
-
-            // Internal error occurred
-            if (borrowedItemObject == null) {
-                GECo4J.LOGGER.error(LogMarkers.API, "Internal Error! Please contact a developer.");
-                return null;
-            }
-
-            return GECoUtils.getBorrowedItemFromJSON(client, borrowedItemObject, id);
+            content = GECoUtils.MAPPER.writeValueAsString(new BorrowItemRequest(name));
         } catch (JsonProcessingException e) {
-            GECo4J.LOGGER.error(LogMarkers.MAIN, "Internal Error! Please contact a developer.");
-            e.printStackTrace();
-            return null;
+            return Mono.error(e);
         }
+
+        return ((DefaultGECoClient) client).REQUESTS.makeRequest(Requests.METHOD.POST, "/lan/user/" + id + "/items", BorrowedItemObject.class, content).map(borrowedItemObject -> GECoUtils.getBorrowedItemFromJSON(client, borrowedItemObject, id));
     }
 }
