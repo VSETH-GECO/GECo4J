@@ -11,8 +11,15 @@ import reactor.netty.http.client.HttpClient;
 import reactor.util.annotation.Nullable;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 public class Requests {
+    private final GECoClient gecoClient;
     private final HttpClient httpClient;
 
     public enum METHOD {GET, POST, DELETE, PATCH}
@@ -23,6 +30,7 @@ public class Requests {
      * @param client The GECo client, can be null if no API key is needed.
      */
     public Requests(GECoClient client) {
+        gecoClient = client;
         httpClient = HttpClient.create().headers(h -> {
             h.add("X-API-KEY", client.getAPIToken());
             h.add("Content-Type", "application/json");
@@ -38,7 +46,90 @@ public class Requests {
         return httpClient;
     }
 
+    private static final int DEFAULT_BUFFER_SIZE = 8192;
+    private static final int MAX_BUFFER_SIZE = Integer.MAX_VALUE - 8;
+
+    private byte[] readAllBytes(InputStream inputStream) throws IOException {
+        byte[] buf = new byte[DEFAULT_BUFFER_SIZE];
+        int capacity = buf.length;
+        int nread = 0;
+        int n;
+        for (; ; ) {
+            // read to EOF which may read more or less than initial buffer size
+            while ((n = inputStream.read(buf, nread, capacity - nread)) > 0)
+                nread += n;
+
+            // if the last call to read returned -1, then we're done
+            if (n < 0)
+                break;
+
+            // need to allocate a larger buffer
+            if (capacity <= MAX_BUFFER_SIZE - capacity) {
+                capacity = capacity << 1;
+            } else {
+                if (capacity == MAX_BUFFER_SIZE)
+                    throw new OutOfMemoryError("Required array size too large");
+                capacity = MAX_BUFFER_SIZE;
+            }
+            buf = Arrays.copyOf(buf, capacity);
+        }
+        return (capacity == nread) ? buf : Arrays.copyOf(buf, nread);
+    }
+
+
+    private <T> Mono<T> makeAndroidRequest(METHOD method, String url, Class<T> clazz, String content) {
+        return Mono.fromSupplier(() -> 0).flatMap(a -> {
+            try {
+                HttpURLConnection request = (HttpURLConnection) new URL(url).openConnection();
+
+                request.setRequestProperty("X-API-KEY", gecoClient.getAPIToken());
+                request.setRequestProperty("Content-Type", "application/json");
+
+                request.setRequestMethod(method.name());
+                if (method != METHOD.GET) {
+                    request.setDoOutput(true);
+
+                    OutputStream outputStream = request.getOutputStream();
+                    outputStream.write(content.getBytes(StandardCharsets.UTF_8));
+                    outputStream.close();
+                }
+
+                request.connect();
+                int responseCode = request.getResponseCode();
+
+                InputStream inputStream = request.getInputStream();
+                byte[] bytes = readAllBytes(inputStream);
+
+                String data = new String(bytes, StandardCharsets.UTF_8);
+                if (responseCode == 403 || responseCode == 404 || responseCode == 424) {
+                    JsonNode jsonNode = GECoUtils.MAPPER.readTree(data);
+
+                    JsonNode message = jsonNode.get("message");
+                    JsonNode code = jsonNode.get("code");
+
+                    if (code == null) {
+                        return Mono.error(new GECo4JException("Error on request to " + request.getURL() + ". Received response code " + responseCode + ". With response text: " + data));
+                    }
+
+                    return Mono.error(new APIException(message != null ? message.asText() : "None", code.asInt()));
+                } else if (responseCode < 200 || responseCode > 299) {
+                    return Mono.error(new GECo4JException("Error on request to " + request.getURL() + ". Received response code " + responseCode + ". With response text: " + data));
+                }
+
+                return Mono.just(GECoUtils.MAPPER.readValue(data, clazz));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return Mono.empty();
+        });
+    }
+
     public <T> Mono<T> makeRequest(METHOD method, String url, Class<T> clazz, @Nullable String content) {
+        if (System.getProperty("java.vm.vendor", "").equals("The Android Project")) {
+            return makeAndroidRequest(method, Endpoints.BASE + url, clazz, content);
+        }
+
         HttpClient.ResponseReceiver<?> receiver = null;
         switch (method) {
             case GET:
