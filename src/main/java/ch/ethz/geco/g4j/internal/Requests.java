@@ -6,6 +6,7 @@ import ch.ethz.geco.g4j.util.GECo4JException;
 import com.fasterxml.jackson.databind.JsonNode;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 import reactor.netty.ByteBufFlux;
 import reactor.netty.http.client.HttpClient;
 import reactor.util.annotation.Nullable;
@@ -76,7 +77,6 @@ public class Requests {
         return (capacity == nread) ? buf : Arrays.copyOf(buf, nread);
     }
 
-
     private <T> Mono<T> makeAndroidRequest(METHOD method, String url, Class<T> clazz, String content) {
         return Mono.fromSupplier(() -> 0).flatMap(a -> {
             try {
@@ -126,8 +126,8 @@ public class Requests {
     }
 
     public <T> Mono<T> makeRequest(METHOD method, String url, Class<T> clazz, @Nullable String content) {
-        if (System.getProperty("java.vm.vendor", "").equals("The Android Project")) {
-            return makeAndroidRequest(method, Endpoints.BASE + url, clazz, content);
+        if (!System.getProperty("java.vm.vendor", "").equals("The Android Project")) {
+            return makeAndroidRequest(method, Endpoints.BASE + url, clazz, content).subscribeOn(Schedulers.single());
         }
 
         HttpClient.ResponseReceiver<?> receiver = null;
