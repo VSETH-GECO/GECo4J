@@ -6,15 +6,9 @@ import ch.ethz.geco.g4j.internal.json.*;
 import ch.ethz.geco.g4j.obj.*;
 import ch.ethz.geco.g4j.util.LogMarkers;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 
 public class GECoUtils {
     public static final ObjectMapper MAPPER = new ObjectMapper();
-
-    // Use jackson afterburner
-    static {
-        MAPPER.registerModule(new AfterburnerModule());
-    }
 
     /**
      * Converts a user JSON object to a user object.
