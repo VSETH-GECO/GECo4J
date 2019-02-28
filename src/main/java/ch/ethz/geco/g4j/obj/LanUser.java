@@ -1,5 +1,6 @@
 package ch.ethz.geco.g4j.obj;
 
+import ch.ethz.geco.g4j.util.APIException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -107,23 +108,27 @@ public interface LanUser {
      * Sets the verification status of a LAN user.
      *
      * @param isVerified If the LAN user is verified or not.
-     * @param legiNumber The legi number of the LAN user.
-     * @return True if the changes were applied, false otherwise.
+     * @param legiNumber The legi number of the LAN user, or other verification information.
+     * @return A Mono of the lan user with the changes applied.
      */
-    Mono<LanUser> setVerification(Boolean isVerified, String legiNumber); // TODO: maybe return status code enum for better error handling
+    Mono<LanUser> setVerification(Boolean isVerified, String legiNumber);
 
     /**
-     * Checks a LAN user in if the correct check-in string for that user is provided.
+     * Checks a LAN user in if the correct check-in string for that user is provided.<br>
+     * <br>
+     * Emits an {@link APIException} with the error {@link APIException.Error#FORBIDDEN} if the user cannot be checked
+     * in, because he is already checked in or the checking string is wrong or {@link APIException.Error#FAILED_DEPENDENCY}
+     * if the user must be verified first.
      *
      * @param checkinString The check-in string of the LAN user.
-     * @return True if the user was checked-in, false otherwise.
+     * @return A Mono of the lan user with the changes applied.
      */
-    Mono<LanUser> checkin(String checkinString); // TODO: maybe return status code enum for better error handling
+    Mono<LanUser> checkin(String checkinString);
 
     /**
      * Gets a list of all items a LAN user has currently borrowed.
      *
-     * @return A list of all borrowed items of the LAN user.
+     * @return A Flux of all items borrowed by this user.
      */
     Flux<BorrowedItem> getBorrowedItems();
 
@@ -131,7 +136,7 @@ public interface LanUser {
      * Gets a borrowed item by its ID.
      *
      * @param id The ID of the borrowed item to get.
-     * @return The borrowed item with the given ID.
+     * @return A Mono which emits the item with the given ID or nothing if not existing.
      */
     Mono<BorrowedItem> getBorrowedItemByID(Long id);
 
@@ -139,7 +144,7 @@ public interface LanUser {
      * Borrows a new item for the LAN user.
      *
      * @param name The name of the item to borrow.
-     * @return The newly borrowed item.
+     * @return A Mono which emits the newly borrowed item on success.
      */
     Mono<BorrowedItem> borrowItem(String name);
 

@@ -4,8 +4,6 @@ import ch.ethz.geco.g4j.obj.LanUser;
 import ch.ethz.geco.g4j.util.APIException;
 
 public class Main {
-    public static LanUser lanUser;
-
     public static void main(String[] args) {
         GECoClient gecoClient = new DefaultGECoClient("");
 
@@ -19,7 +17,11 @@ public class Main {
             } else {
                 e.printStackTrace();
             }
-        }).subscribe(lanUser1 -> System.out.println(lanUser1.getFullName()));
+        }).flatMapMany(LanUser::getBorrowedItems).collectList().subscribe(l -> {
+            if (l.isEmpty()) {
+                System.out.println("The user has no borrowed items.");
+            }
+        });
 
         while (true) {
         }

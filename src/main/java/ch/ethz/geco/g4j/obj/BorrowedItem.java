@@ -19,6 +19,8 @@ public interface BorrowedItem {
 
     /**
      * Removes the item from the list of borrowed items.
+     *
+     * @return A Mono which emits on completion.
      */
     Mono<Void> remove();
 }
