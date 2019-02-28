@@ -55,10 +55,9 @@ public class Requests {
                 break;
         }
 
-        final HttpClient.ResponseReceiver<?> finalReceiver = receiver;
-        return receiver.response().flatMap(response -> {
+        return receiver.responseSingle((response, responseContent) -> {
             int responseCode = response.status().code();
-            return finalReceiver.responseContent().aggregate().asString().flatMap(data -> {
+            return responseContent.asString().flatMap(data -> {
                 if (responseCode == 403 || responseCode == 404 || responseCode == 424) {
                     JsonNode jsonNode;
                     try {

@@ -165,6 +165,7 @@ public class WebLanUser implements LanUser {
             return Mono.error(e);
         }
 
-        return ((DefaultGECoClient) client).REQUESTS.makeRequest(Requests.METHOD.POST, "/lan/user/" + id + "/items", BorrowedItemObject.class, content).map(borrowedItemObject -> GECoUtils.getBorrowedItemFromJSON(client, borrowedItemObject, id));
+        return ((DefaultGECoClient) client).REQUESTS.makeRequest(Requests.METHOD.POST, "/lan/user/" + id + "/items", BorrowedItemObject.class, content)
+                .map(borrowedItemObject -> GECoUtils.getBorrowedItemFromJSON(client, borrowedItemObject, id));
     }
 }

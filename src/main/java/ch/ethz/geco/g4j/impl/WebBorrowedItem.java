@@ -30,6 +30,6 @@ public class WebBorrowedItem implements BorrowedItem {
 
     @Override
     public Mono<Void> remove() {
-        return ((DefaultGECoClient) client).REQUESTS.makeRequest(Requests.METHOD.DELETE, "/lan/user/" + userID + "/items/" + id, null, null);
+        return ((DefaultGECoClient) client).REQUESTS.makeRequest(Requests.METHOD.DELETE, "/lan/user/" + userID + "/items/" + id, null, null).then();
     }
 }
