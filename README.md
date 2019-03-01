@@ -1,5 +1,5 @@
 # GECo4J [![](https://jitpack.io/v/VSETH-GECO/GECo4J.svg)](https://jitpack.io/#VSETH-GECO/GECo4J) [![Jenkins](https://jenkins.stammgruppe.eu/job/GECo4J/job/master/badge/icon)](https://jenkins.stammgruppe.eu/blue/organizations/jenkins/GECo4J/activity?branch=master)
-Java Interface for the [GECo API](https://geco.ethz.ch/api/) written in Java 8.
+An Android compatible, [reactive](https://projectreactor.io/) Java wrapper for the [GECo API](https://geco.ethz.ch/api/) written in Java 8.
 
 You can find the latest builds on [JitPack](https://jitpack.io/#VSETH-GECO/GECo4J) or here on GitHub.
 
@@ -42,21 +42,57 @@ Alternatively you can fetch the Javadocs of a specific version or commit by past
 `https://jitpack.io/com/github/VSETH-GECO/GECo4J/<version>/javadoc/`
 
 #### Tutorial
-The first thing you have to do, is to construct a `GECo4JClient` using your API token:
+The first thing you have to do, is to construct a `DefaultGECo4JClient` using your API token:
 ```java
 GECoClient gecoClient = new DefaultGECoClient(<API Token>);
 ```
-Then you can look at the [Javadocs](https://jitpack.io/com/github/VSETH-GECO/GECo4J/0.9.5/javadoc/) to see what you can do with a `IGECoClient`.
+Then you can look at the [Javadocs](https://jitpack.io/com/github/VSETH-GECO/GECo4J/0.9.5/javadoc/) to see what you can do with a `GECoClient`.
 For example print the titles of the first page of events:
 ```java
 class Example {
     public static void main(String[] args){
         GECoClient gecoClient = new DefaultGECoClient("this is your token");
         
-        List<Event> events = gecoClient.getEvents(1);
-        for (Event event : events) {
-            System.out.println(event.getTitle());
-        }
+        // Print the titles of the first page of news
+        gecoClient.getNews(1).subscribe(news -> System.out.println(news.getTitle()));
     }
 }
 ```
+Keep in mind that all function calls are non-blocking, if you don't use `.block()`. Thus, the program could terminate before your function completes.
+
+##### Error Handling
+Here is a more complicated example with error handling which prints the borrowed items of the lan user with ID = 1:
+```java
+class Example {
+    public static void main(String[] args){
+        // Get the lan user with ID = 1
+        gecoClient.getLanUserByID(1L).doOnError(e -> {
+            // Check if it's simply a NOT_FOUND error
+            if (e instanceof APIException) {
+                if (((APIException) e).getError() == APIException.Error.NOT_FOUND) {
+                    System.out.println("User not found");
+                    return;
+                }
+            }
+            // If it's another error
+            e.printStackTrace();
+        // Get the borrowed items of the lan user and collect them as a list
+        }).subscribe(lanUser -> lanUser.getBorrowedItems().collectList().subscribe(l -> {
+            if (l.isEmpty()) {
+                System.out.printf("%s has no borrowed items.\n", lanUser.getFullName());
+            } else {
+                System.out.printf("Items borrowed by %s: %s", lanUser.getFullName(), l.get(0).getName());
+                for (int i = 1; i < l.size(); i++) {
+                    System.out.print(", " + l.get(i).getName());
+                }
+                System.out.println();
+            }
+        }));
+    }
+}
+```
+You usually want to handle `APIException`'s since they are not fatal and only exist to inform you about the state of the requested resource.
+If a function emits an `APIException`, it is written in the documentation which and when they are emitted.
+
+Other exceptions such as `GECo4JException` or `IOException` may occur, if the input was malformed or if there are connection problems. 
+Note that `GECo4JException`'s only occur, if the request could be completed but we got an unexpected response from the API.

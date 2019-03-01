@@ -126,6 +126,7 @@ public class Requests {
     }
 
     public <T> Mono<T> makeRequest(METHOD method, String url, Class<T> clazz, @Nullable String content) {
+        // Use java.net for Android since netty seems to be problematic
         if (!System.getProperty("java.vm.vendor", "").equals("The Android Project")) {
             return makeAndroidRequest(method, Endpoints.BASE + url, clazz, content).subscribeOn(Schedulers.single());
         }
