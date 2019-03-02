@@ -44,7 +44,7 @@ public class WebLanUser implements LanUser {
 
         // Automatically verify external users
         if (lanPackage.equalsIgnoreCase("external")) {
-            setVerification(true, "none");
+            setVerification(true, "none").block();
         }
     }
 
