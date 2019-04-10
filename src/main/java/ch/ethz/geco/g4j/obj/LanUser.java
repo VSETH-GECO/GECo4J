@@ -67,14 +67,22 @@ public interface LanUser {
      *
      * @return The seat name of the LAN user.
      */
-    Optional<String> getSeatName(); // TODO: Possible to replace with WebSeat Object
+    Optional<String> getSeatName();
 
     /**
-     * Gets the birthday of the LAN user.
+     * Gets the seat of the LAN user if present.
+     *
+     * @return The seat of the LAN user.
+     */
+    Mono<Seat> getSeat();
+
+    /**
+     * Gets the birthday of the LAN user in UNIX time.
+     * This is the number of seconds since January 1, 1970, 00:00:00 GMT.
      *
      * @return The birthday of the LAN user.
      */
-    Long getBirthDay(); // TODO: Possible to replace with Instant
+    Long getBirthDay();
 
     /**
      * Gets whether or not the student assoc. of the user was verified.

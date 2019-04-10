@@ -6,6 +6,7 @@ import ch.ethz.geco.g4j.internal.json.*;
 import ch.ethz.geco.g4j.obj.BorrowedItem;
 import ch.ethz.geco.g4j.obj.GECoClient;
 import ch.ethz.geco.g4j.obj.LanUser;
+import ch.ethz.geco.g4j.obj.Seat;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -86,6 +87,15 @@ public class WebLanUser implements LanUser {
     @Override
     public Optional<String> getSeatName() {
         return Optional.ofNullable(seatName);
+    }
+
+    @Override
+    public Mono<Seat> getSeat() {
+        if (seatName == null) {
+            return Mono.empty();
+        }
+
+        return client.getSeatByName(seatName);
     }
 
     @Override

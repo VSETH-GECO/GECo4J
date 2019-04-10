@@ -1,5 +1,7 @@
 package ch.ethz.geco.g4j.obj;
 
+import reactor.core.publisher.Mono;
+
 import java.util.Optional;
 
 /**
@@ -18,14 +20,28 @@ public interface Seat {
      *
      * @return The user ID of the LAN user.
      */
-    Optional<Long> getLanUserID(); // TODO: Possible to replace with LanUser
+    Optional<Long> getLanUserID();
+
+    /**
+     * Gets the LAN user sitting on the seat if present.
+     *
+     * @return The LAN user of this seat.
+     */
+    Mono<LanUser> getLanUser();
 
     /**
      * Gets the user ID of the Web user sitting on the seat if available.
      *
      * @return The user ID of the Web user.
      */
-    Optional<Long> getWebUserID(); // TODO: Possible to replace with User
+    Optional<Long> getWebUserID();
+
+    /**
+     * Gets the web user associated with the seat if available.
+     *
+     * @return The web user sitting on this seat.
+     */
+    Mono<User> getWebUser();
 
     /**
      * Gets the status of the seat.

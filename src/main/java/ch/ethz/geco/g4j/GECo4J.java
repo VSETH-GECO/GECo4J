@@ -19,32 +19,32 @@ public class GECo4J {
     /**
      * The name of the project.
      */
-    public static final String NAME;
+    private static final String NAME;
 
     /**
      * The version of the project.
      */
-    public static final String VERSION;
+    private static final String VERSION;
 
     /**
      * The commit hash of the version of the project.
      */
-    public static final String COMMIT;
+    private static final String COMMIT;
 
     /**
      * The git branch of the project.
      */
-    public static final String BRANCH;
+    private static final String BRANCH;
 
     /**
      * The description of the project.
      */
-    public static final String DESCRIPTION;
+    private static final String DESCRIPTION;
 
     /**
      * The github repo of the project.
      */
-    public static final String URL;
+    private static final String URL;
 
     /**
      * SLF4J Instance.
@@ -59,6 +59,12 @@ public class GECo4J {
     // Dynamically getting various information from maven
     static {
         InputStream stream = GECo4J.class.getClassLoader().getResourceAsStream("lib.properties");
+
+        if (stream == null) {
+            System.err.println("Could not load lib.properties.");
+            System.exit(1);
+        }
+
         Properties properties = new Properties();
         try {
             properties.load(stream);
@@ -117,7 +123,7 @@ public class GECo4J {
         private volatile int level = Level.INFO.ordinal();
         private volatile PrintStream standard, error;
 
-        public GECo4JLogger(String name) {
+        GECo4JLogger(String name) {
             this.name = name;
             standard = System.out;
             error = System.err;
