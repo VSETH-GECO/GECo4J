@@ -26,7 +26,7 @@ public class GECoUtils {
      * @param seatObject The seat object to convert.
      * @return The converted seat object.
      */
-    public static Seat getSeatFromJSON(SeatObject seatObject) {
+    public static Seat getSeatFromJSON(GECoClient client, SeatObject seatObject) {
         Seat.Status status;
         switch (seatObject.status) {
             case 0:
@@ -43,7 +43,7 @@ public class GECoUtils {
                 status = null;
         }
 
-        return new WebSeat(seatObject.id, seatObject.lan_user_id, seatObject.web_user_id, status, seatObject.username, seatObject.seat_number);
+        return new WebSeat(client, seatObject.id, seatObject.lan_user_id, seatObject.web_user_id, status, seatObject.username, seatObject.seat_number);
     }
 
     /**
