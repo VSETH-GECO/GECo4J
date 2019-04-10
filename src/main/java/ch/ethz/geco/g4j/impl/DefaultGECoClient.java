@@ -13,7 +13,7 @@ public class DefaultGECoClient implements GECoClient {
     /**
      * The requests holder object.
      */
-    public final Requests REQUESTS;
+    final Requests REQUESTS;
     private final String apiToken;
 
     public DefaultGECoClient(String apiToken) {
@@ -42,7 +42,7 @@ public class DefaultGECoClient implements GECoClient {
         return REQUESTS.makeRequest(Requests.METHOD.GET, "/lan/seats", SeatObject[].class, null).flatMapMany(seatObjects -> {
             Seat[] seats = new Seat[seatObjects.length];
             for (int i = 0; i < seatObjects.length; i++) {
-                seats[i] = GECoUtils.getSeatFromJSON(seatObjects[i]);
+                seats[i] = GECoUtils.getSeatFromJSON(this, seatObjects[i]);
             }
 
             return Flux.fromArray(seats);
@@ -51,7 +51,7 @@ public class DefaultGECoClient implements GECoClient {
 
     @Override
     public Mono<Seat> getSeatByID(Long id) {
-        return REQUESTS.makeRequest(Requests.METHOD.GET, "/lan/seats/" + id, SeatObject.class, null).map(GECoUtils::getSeatFromJSON);
+        return REQUESTS.makeRequest(Requests.METHOD.GET, "/lan/seats/" + id, SeatObject.class, null).map(seatObject -> GECoUtils.getSeatFromJSON(this, seatObject));
     }
 
     @Override
@@ -68,7 +68,7 @@ public class DefaultGECoClient implements GECoClient {
 
     @Override
     public Mono<Seat> getSeatByName(String name) {
-        return REQUESTS.makeRequest(Requests.METHOD.GET, "/lan/search/seats/" + name, SeatObject.class, null).map(GECoUtils::getSeatFromJSON);
+        return REQUESTS.makeRequest(Requests.METHOD.GET, "/lan/search/seats/" + name, SeatObject.class, null).map(seatObject -> GECoUtils.getSeatFromJSON(this, seatObject));
     }
 
     @Override
