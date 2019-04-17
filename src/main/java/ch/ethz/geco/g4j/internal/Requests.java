@@ -1,8 +1,10 @@
 package ch.ethz.geco.g4j.internal;
 
+import ch.ethz.geco.g4j.GECo4J;
 import ch.ethz.geco.g4j.obj.GECoClient;
 import ch.ethz.geco.g4j.util.APIException;
 import ch.ethz.geco.g4j.util.GECo4JException;
+import ch.ethz.geco.g4j.util.LogMarkers;
 import com.fasterxml.jackson.databind.JsonNode;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -127,9 +129,12 @@ public class Requests {
 
     public <T> Mono<T> makeRequest(METHOD method, String url, Class<T> clazz, @Nullable String content) {
         // Use java.net for Android since netty seems to be problematic
-        if (!System.getProperty("java.vm.vendor", "").equals("The Android Project")) {
+        if (System.getProperty("java.vm.vendor", "").equals("The Android Project")) {
+            GECo4J.LOGGER.trace(LogMarkers.API, "ANDROID {} - {}", method.name(), url);
             return makeAndroidRequest(method, Endpoints.BASE + url, clazz, content).subscribeOn(Schedulers.single());
         }
+
+        GECo4J.LOGGER.trace(LogMarkers.API, "{} - {}", method.name(), url);
 
         HttpClient.ResponseReceiver<?> receiver = null;
         switch (method) {
@@ -149,7 +154,9 @@ public class Requests {
 
         return receiver.responseSingle((response, responseContent) -> {
             int responseCode = response.status().code();
-            return responseContent.asString().flatMap(data -> {
+
+            return responseContent.asString().defaultIfEmpty("EMPTY").flatMap(data -> {
+                GECo4J.LOGGER.trace(LogMarkers.API, "Response: {} {}", responseCode, data);
                 if (responseCode == 403 || responseCode == 404 || responseCode == 424) {
                     JsonNode jsonNode;
                     try {
