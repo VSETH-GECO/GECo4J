@@ -1,9 +1,16 @@
+import ch.ethz.geco.g4j.GECo4J;
 import ch.ethz.geco.g4j.impl.DefaultGECoClient;
 import ch.ethz.geco.g4j.obj.GECoClient;
 import ch.ethz.geco.g4j.util.APIException;
 
 public class Main {
     public static void main(String[] args) {
+        // Set debug logging
+        ((GECo4J.GECo4JLogger) GECo4J.LOGGER).setLevel(GECo4J.GECo4JLogger.Level.TRACE);
+
+        // Test Android
+        System.setProperty("java.vm.vendor", "The Android Project");
+
         GECoClient gecoClient = new DefaultGECoClient("");
 
         gecoClient.getLanUserByID(1L).doOnError(e -> {
