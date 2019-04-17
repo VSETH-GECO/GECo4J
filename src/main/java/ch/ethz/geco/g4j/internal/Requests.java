@@ -88,7 +88,7 @@ public class Requests {
                 request.setRequestProperty("Content-Type", "application/json");
 
                 request.setRequestMethod(method.name());
-                if (method != METHOD.GET) {
+                if (content != null && method != METHOD.GET) {
                     request.setDoOutput(true);
 
                     OutputStream outputStream = request.getOutputStream();
@@ -103,6 +103,7 @@ public class Requests {
                 byte[] bytes = readAllBytes(inputStream);
 
                 String data = new String(bytes, StandardCharsets.UTF_8);
+                GECo4J.LOGGER.trace(LogMarkers.API, "Response: {} {}", responseCode, data.isEmpty() ? "EMPTY" : data);
                 if (responseCode == 403 || responseCode == 404 || responseCode == 424) {
                     JsonNode jsonNode = GECoUtils.MAPPER.readTree(data);
 
