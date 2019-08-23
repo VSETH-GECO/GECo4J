@@ -19,7 +19,7 @@ Add the following to your `pom.xml`:
     <dependency>
         <groupId>com.github.VSETH-GECO</groupId>
     	<artifactId>GECo4J</artifactId>
-    	<version>0.9.7</version> <!-- Or use any other version including commit hashes -->
+    	<version>0.9.8</version> <!-- Or use any other version including commit hashes -->
     </dependency>
 </dependencies>
 ```
@@ -34,7 +34,7 @@ You can get a shaded jar on [Jenkins](https://jenkins.stammgruppe.eu/blue/organi
 
 ## Usage
 #### Resources
-* [Latest Release Javadocs](https://jitpack.io/com/github/VSETH-GECO/GECo4J/0.9.7/javadoc/)
+* [Latest Release Javadocs](https://jitpack.io/com/github/VSETH-GECO/GECo4J/0.9.8/javadoc/)
 * [Latest Master Javadocs](https://jitpack.io/com/github/VSETH-GECO/GECo4J/master-SNAPSHOT/javadoc/)
 * [Latest Dev Javadocs](https://jitpack.io/com/github/VSETH-GECO/GECo4J/dev-SNAPSHOT/javadoc/)
 
@@ -46,7 +46,7 @@ The first thing you have to do, is to construct a `DefaultGECo4JClient` using yo
 ```java
 GECoClient gecoClient = new DefaultGECoClient(<API Token>);
 ```
-Then you can look at the [Javadocs](https://jitpack.io/com/github/VSETH-GECO/GECo4J/0.9.7/javadoc/) to see what you can do with a `GECoClient`.
+Then you can look at the [Javadocs](https://jitpack.io/com/github/VSETH-GECO/GECo4J/0.9.8/javadoc/) to see what you can do with a `GECoClient`.
 For example print the titles of the first page of events:
 ```java
 class Example {
