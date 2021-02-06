@@ -17,44 +17,37 @@ import java.util.Properties;
 
 public class GECo4J {
     /**
-     * The name of the project.
-     */
-    private static final String NAME;
-
-    /**
-     * The version of the project.
-     */
-    private static final String VERSION;
-
-    /**
-     * The commit hash of the version of the project.
-     */
-    private static final String COMMIT;
-
-    /**
-     * The git branch of the project.
-     */
-    private static final String BRANCH;
-
-    /**
-     * The description of the project.
-     */
-    private static final String DESCRIPTION;
-
-    /**
-     * The github repo of the project.
-     */
-    private static final String URL;
-
-    /**
      * SLF4J Instance.
      */
     public static final Logger LOGGER = initLogger();
-
     /**
      * When this class was loaded.
      */
     protected static final Instant launchTime = Instant.now();
+    /**
+     * The name of the project.
+     */
+    private static final String NAME;
+    /**
+     * The version of the project.
+     */
+    private static final String VERSION;
+    /**
+     * The commit hash of the version of the project.
+     */
+    private static final String COMMIT;
+    /**
+     * The git branch of the project.
+     */
+    private static final String BRANCH;
+    /**
+     * The description of the project.
+     */
+    private static final String DESCRIPTION;
+    /**
+     * The github repo of the project.
+     */
+    private static final String URL;
 
     // Dynamically getting various information from maven
     static {
@@ -92,7 +85,7 @@ public class GECo4J {
     private static Logger initLogger() {
         if (!isSLF4JImplementationPresent()) {
             System.err.println("GECo4J: ERROR INITIALIZING LOGGER!");
-            System.err.println("GECo4J: No SLF4J implementation found, reverting to the internal implementation ("+GECo4JLogger.class.getName()+")");
+            System.err.println("GECo4J: No SLF4J implementation found, reverting to the internal implementation (" + GECo4JLogger.class.getName() + ")");
             System.err.println("GECo4J: It is *highly* recommended to use a fully featured implementation like logback!");
             return new GECo4JLogger(GECo4J.class.getName());
         } else {
@@ -159,9 +152,9 @@ public class GECo4J {
         /**
          * Logs a message on the given level.
          *
-         * @param level The level to log the message on.
+         * @param level   The level to log the message on.
          * @param message The message to log.
-         * @param error The error to log.
+         * @param error   The error to log.
          */
         private void log(Level level, String message, Throwable error) {
             if (level.ordinal() >= this.level) {

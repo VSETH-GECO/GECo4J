@@ -6,13 +6,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class WebEvent implements Event {
+    private static final Pattern idPattern = Pattern.compile("/(\\d+)/?");
     private final Long id;
     private final String title;
     private final String description;
     private final String url;
     private final Boolean isDraft;
-
-    private static final Pattern idPattern = Pattern.compile("/(\\d+)/?");
 
     public WebEvent(String title, String description, String url, Boolean isDraft) {
         this.title = title;

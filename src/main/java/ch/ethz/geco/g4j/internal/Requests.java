@@ -22,10 +22,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 public class Requests {
+    private static final int DEFAULT_BUFFER_SIZE = 8192;
+    private static final int MAX_BUFFER_SIZE = Integer.MAX_VALUE - 8;
     private final GECoClient gecoClient;
     private final HttpClient httpClient;
-
-    public enum METHOD {GET, POST, DELETE, PATCH}
 
     /**
      * Constructs a new Request holder.
@@ -50,9 +50,6 @@ public class Requests {
     public HttpClient getHttpClient() {
         return httpClient;
     }
-
-    private static final int DEFAULT_BUFFER_SIZE = 8192;
-    private static final int MAX_BUFFER_SIZE = Integer.MAX_VALUE - 8;
 
     private byte[] readAllBytes(InputStream inputStream) throws IOException {
         byte[] buf = new byte[DEFAULT_BUFFER_SIZE];
@@ -193,4 +190,6 @@ public class Requests {
             });
         });
     }
+
+    public enum METHOD {GET, POST, DELETE, PATCH}
 }

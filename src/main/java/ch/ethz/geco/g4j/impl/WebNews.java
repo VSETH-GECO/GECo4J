@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class WebNews implements News {
+    private static final Pattern idPattern = Pattern.compile("/(\\d+)/?");
     private final Long id;
     private final String title;
     private final String description;
@@ -16,8 +17,6 @@ public class WebNews implements News {
     private final String authorUrl;
     private final String authorIconUrl;
     private final String footer;
-
-    private static final Pattern idPattern = Pattern.compile("/(\\d+)/?");
 
     public WebNews(String title, String description, String url, Boolean isDraft, Long publishedAt, String authorName, String authorUrl, String authorIconUrl, String footer) {
         this.title = title;
