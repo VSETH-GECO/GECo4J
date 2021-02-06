@@ -4,4 +4,5 @@ public class EventObject {
     public String title;
     public String description;
     public String url;
+    public Boolean is_draft;
 }

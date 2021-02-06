@@ -10,13 +10,15 @@ public class WebEvent implements Event {
     private final String title;
     private final String description;
     private final String url;
+    private final Boolean isDraft;
 
     private static final Pattern idPattern = Pattern.compile("/(\\d+)/?");
 
-    public WebEvent(String title, String description, String url) {
+    public WebEvent(String title, String description, String url, Boolean isDraft) {
         this.title = title;
         this.description = description;
         this.url = url;
+        this.isDraft = isDraft;
 
         Matcher matcher = idPattern.matcher(url);
 
@@ -45,5 +47,10 @@ public class WebEvent implements Event {
     @Override
     public String getURL() {
         return url;
+    }
+
+    @Override
+    public Boolean isDraft() {
+        return isDraft;
     }
 }

@@ -110,6 +110,6 @@ public class GECoUtils {
      * @return The converted event object.
      */
     public static Event getEventFromJSON(EventObject eventObject) {
-        return new WebEvent(eventObject.title, eventObject.description, eventObject.url);
+        return new WebEvent(eventObject.title, eventObject.description, eventObject.url, eventObject.is_draft);
     }
 }

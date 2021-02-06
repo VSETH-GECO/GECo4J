@@ -28,4 +28,11 @@ public interface Event {
      * @return The URL of the event.
      */
     String getURL();
+
+    /**
+     * Gets whether or not the event post is a draft.
+     *
+     * @return True if the event post is a draft, false otherwise.
+     */
+    Boolean isDraft();
 }
