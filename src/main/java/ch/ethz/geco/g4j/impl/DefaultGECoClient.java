@@ -17,9 +17,9 @@ public class DefaultGECoClient implements GECoClient {
     private final String apiToken;
 
     public DefaultGECoClient(String apiToken) {
-        REQUESTS = new Requests(this);
-        GECo4J.LOGGER.info(LogMarkers.MAIN, "Creating new client with API token: " + apiToken);
+        GECo4J.LOGGER.info(LogMarkers.MAIN, "Creating new client with API token.");
         this.apiToken = apiToken;
+        REQUESTS = new Requests(this);
     }
 
     @Override

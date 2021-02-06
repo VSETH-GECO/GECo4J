@@ -35,7 +35,9 @@ public class Requests {
     public Requests(GECoClient client) {
         gecoClient = client;
         httpClient = HttpClient.create().headers(h -> {
-            h.add("X-API-KEY", client.getAPIToken());
+            if (client.getAPIToken() != null) {
+                h.add("X-API-KEY", client.getAPIToken());
+            }
             h.add("Content-Type", "application/json");
         }).baseUrl(Endpoints.BASE);
     }
